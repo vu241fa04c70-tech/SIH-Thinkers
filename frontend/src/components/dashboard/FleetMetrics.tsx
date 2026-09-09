@@ -1,5 +1,6 @@
 import React from 'react';
-import { Truck, CloudRain, Fuel, TrendingDown, DollarSign } from 'lucide-react';
+import { Truck, Cloud, Fuel, DollarSign, TrendingDown } from 'lucide-react';
+import { InfoTooltip } from '../common/InfoTooltip';
 
 interface SummaryData {
   total_vehicles: number;
@@ -15,36 +16,40 @@ interface SummaryData {
 export const FleetMetrics: React.FC<{ summary?: SummaryData }> = ({ summary }) => {
   const cards = [
     {
-      title: "Active Fleet Vehicles",
-      value: `${summary?.active_vehicles || 44} / ${summary?.total_vehicles || 52}`,
-      subtext: "84.6% Operational Rate",
+      title: "🚚 VEHICLES ACTIVE",
+      value: `${summary?.active_vehicles || 44} of ${summary?.total_vehicles || 52}`,
+      subtext: "84.6% of your fleet is currently operating",
+      tooltip: "The percentage of registered fleet vehicles and ships currently active on trips today.",
       icon: Truck,
-      color: "text-blue-400",
-      bg: "bg-blue-950/40 border-blue-800/40",
+      color: "text-blue-700",
+      bg: "bg-blue-50/70 border-blue-200",
     },
     {
-      title: "GHG Saved Today",
-      value: `${summary?.ghg_saved_today_kg || 1641.2} kg`,
-      subtext: "Well-to-Wheel CO2e Reduction",
-      icon: CloudRain,
-      color: "text-emerald-400",
-      bg: "bg-emerald-950/40 border-emerald-800/40",
+      title: "🌱 POLLUTION AVOIDED TODAY",
+      value: `${(summary?.ghg_saved_today_kg || 1641.2).toLocaleString()} kg CO₂e`,
+      subtext: "Compared with normal routes",
+      tooltip: "Total greenhouse gas emissions prevented today by taking GreenFleet optimized routes.",
+      icon: Cloud,
+      color: "text-emerald-700",
+      bg: "bg-emerald-50/70 border-emerald-200",
     },
     {
-      title: "Fuel Savings Today",
-      value: `${summary?.fuel_saved_today_liters || 612.4} L`,
-      subtext: "21.5% Below Baseline",
+      title: "⛽ FUEL SAVED TODAY",
+      value: `${summary?.fuel_saved_today_liters || 612} L`,
+      subtext: "21.5% below normal routes",
+      tooltip: "Total fuel volume saved today across all active land and maritime trips.",
       icon: Fuel,
-      color: "text-amber-400",
-      bg: "bg-amber-950/40 border-amber-800/40",
+      color: "text-amber-700",
+      bg: "bg-amber-50/70 border-amber-200",
     },
     {
-      title: "Daily Cost Savings",
-      value: `$${summary?.cost_savings_today_usd || 734.88}`,
-      subtext: "Estimated $268K Annualized",
+      title: "💰 MONEY SAVED TODAY",
+      value: `₹${Math.round((summary?.cost_savings_today_usd || 734.88) * 83).toLocaleString()}`,
+      subtext: "Direct fuel bill savings",
+      tooltip: "Total money saved on fuel costs today compared to taking conventional unoptimized routes.",
       icon: DollarSign,
-      color: "text-teal-400",
-      bg: "bg-teal-950/40 border-teal-800/40",
+      color: "text-teal-700",
+      bg: "bg-teal-50/70 border-teal-200",
     },
   ];
 
@@ -53,17 +58,20 @@ export const FleetMetrics: React.FC<{ summary?: SummaryData }> = ({ summary }) =
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
-          <div key={idx} className={`p-5 rounded-2xl border ${card.bg} backdrop-blur flex flex-col justify-between transition-all hover:scale-[1.01]`}>
+          <div key={idx} className={`p-5 rounded-2xl border ${card.bg} flex flex-col justify-between transition-all hover:shadow-md hover:scale-[1.01]`}>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{card.title}</span>
-              <div className={`p-2 rounded-xl bg-slate-900/60 ${card.color}`}>
+              <span className="text-xs font-extrabold text-slate-700 tracking-wide flex items-center">
+                {card.title}
+                <InfoTooltip text={card.tooltip} title="What does this mean?" />
+              </span>
+              <div className={`p-2 rounded-xl bg-white border border-slate-200 shadow-sm ${card.color}`}>
                 <Icon className="w-5 h-5" />
               </div>
             </div>
             <div className="mt-4">
-              <div className="text-2xl font-bold text-white tracking-tight">{card.value}</div>
-              <div className="text-xs font-medium text-slate-400 mt-1 flex items-center gap-1">
-                <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="text-2xl font-extrabold text-slate-900 tracking-tight">{card.value}</div>
+              <div className="text-xs font-semibold text-slate-600 mt-1 flex items-center gap-1">
+                <TrendingDown className="w-3.5 h-3.5 text-emerald-600" />
                 {card.subtext}
               </div>
             </div>
