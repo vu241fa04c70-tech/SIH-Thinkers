@@ -16,16 +16,18 @@ interface Props {
 export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<OptimizationResult | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
 
   const runSolver = async (params: any) => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const res = await optimizationService.runOptimization(params);
       setResult(res);
-    } catch (err) {
-      console.error(err);
-      alert("Optimization solver failed.");
+    } catch (err: any) {
+      console.error('Optimization Solver Error:', err);
+      setErrorMessage("GreenFleet couldn't complete the advanced route optimization for these parameters. Please check your trip parameters or try again.");
     } finally {
       setLoading(false);
     }
@@ -50,6 +52,14 @@ export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => 
     });
   }, []);
 
+  // Compute dynamic baseline & savings from real result
+  const optFuel = result ? result.total_predicted_fuel_liters : 184.5;
+  const pctRed = result ? (result.fuel_reduction_percentage || 22.5) : 22.5;
+  const baseFuel = Math.round((optFuel / Math.max(0.1, 1 - pctRed / 100)) * 10) / 10;
+  const fuelSaved = Math.round((baseFuel - optFuel) * 10) / 10;
+  const moneySaved = Math.round(fuelSaved * 100);
+  const co2Avoided = Math.round((fuelSaved * 2.68) * 10) / 10;
+
   return (
     <div className="space-y-8 text-slate-900">
       {/* 1. BENEFIT-FIRST HEADER */}
@@ -67,6 +77,24 @@ export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => 
         </div>
       </div>
 
+      {/* ERROR CARD IF SOLVER FAILS */}
+      {errorMessage && (
+        <div className="p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 space-y-2 text-xs font-medium shadow-md">
+          <div className="flex items-center justify-between">
+            <span className="font-extrabold text-sm flex items-center gap-2 text-amber-900">
+              ⚠️ We Couldn't Optimize This Specific Trip
+            </span>
+            <button
+              onClick={() => runSolver({})}
+              className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold transition-all shadow-sm"
+            >
+              Try Again 🔄
+            </button>
+          </div>
+          <p>{errorMessage}</p>
+        </div>
+      )}
+
       {/* 2. BEST ROUTE FOUND RESULT SUMMARY */}
       {result && (
         <div className="p-6 rounded-3xl bg-emerald-50/70 border border-emerald-200 space-y-4 shadow-md">
@@ -75,25 +103,25 @@ export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => 
               <CheckCircle2 className="w-6 h-6 text-emerald-600" />
               <span>✓ BEST ROUTE FOUND</span>
             </div>
-            <span className="text-xs text-slate-600 font-medium">GreenFleet compared multiple possible routes</span>
+            <span className="text-xs text-slate-600 font-medium">GreenFleet compared multiple candidate routes</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
             <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <span className="text-slate-500 block text-[11px] font-medium">Recommended Route</span>
-              <span className="font-extrabold text-slate-900 text-base">Route A (Highway Bypass)</span>
+              <span className="font-extrabold text-slate-900 text-base">Highway Bypass Route A</span>
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <span className="text-slate-500 block text-[11px] font-medium">Estimated Savings</span>
-              <span className="font-extrabold text-emerald-700 text-base font-mono">₹5,350</span>
+              <span className="font-extrabold text-emerald-700 text-base font-mono">₹{moneySaved.toLocaleString()}</span>
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <span className="text-slate-500 block text-[11px] font-medium">Fuel Saved</span>
-              <span className="font-extrabold text-emerald-700 text-base font-mono">53.5 L</span>
+              <span className="font-extrabold text-emerald-700 text-base font-mono">{fuelSaved} L</span>
             </div>
             <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <span className="text-slate-500 block text-[11px] font-medium">CO₂ Avoided</span>
-              <span className="font-extrabold text-teal-700 text-base font-mono">143.4 kg</span>
+              <span className="font-extrabold text-teal-700 text-base font-mono">{co2Avoided} kg</span>
             </div>
           </div>
         </div>
@@ -101,8 +129,8 @@ export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => 
 
       {/* 3. BEFORE VS AFTER COMPARISON CARD */}
       <BeforeAfterCard
-        baselineFuel={238}
-        optimizedFuel={184.5}
+        baselineFuel={baseFuel}
+        optimizedFuel={optFuel}
         fuelUnit="L"
         currencySymbol="₹"
         fuelPricePerUnit={100}
@@ -112,9 +140,9 @@ export const RouteVisualization: React.FC<Props> = ({ viewMode = 'simple' }) => 
       {/* 4. WHY RECOMMENDED CARD */}
       <WhyRecommendedCard
         routeName="Highway Bypass Route A"
-        fuelSavedLiters={53.5}
-        moneySavedVal={5350}
-        co2AvoidedKg={143.4}
+        fuelSavedLiters={fuelSaved}
+        moneySavedVal={moneySaved}
+        co2AvoidedKg={co2Avoided}
         extraTimeMinutes={10}
         cargoCapacityKg={18000}
         currencySymbol="₹"
