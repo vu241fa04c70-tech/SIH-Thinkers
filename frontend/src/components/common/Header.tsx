@@ -3,21 +3,39 @@ import { Leaf, Cpu, UserCheck, HelpCircle, User } from 'lucide-react';
 import { HelpModal } from './HelpModal';
 
 interface HeaderProps {
+  activeTab?: string;
+  setActiveTab?: (tab: string) => void;
   viewMode: 'simple' | 'technical';
   setViewMode: (mode: 'simple' | 'technical') => void;
   onNavigate?: (tab: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ viewMode, setViewMode, onNavigate }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTab = 'landing', setActiveTab, viewMode, setViewMode, onNavigate }) => {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  const menuItems = [
+    { id: 'landing', label: '🏠 Home' },
+    { id: 'fleet', label: '🚚 My Vehicles' },
+    { id: 'predictions', label: '📍 Plan a Trip' },
+    { id: 'optimization', label: '🧭 Best Route' },
+    { id: 'analytics', label: '💰 My Savings' },
+    { id: 'reports', label: '📊 Reports' },
+    { id: 'about', label: 'ℹ️ About' },
+  ];
+
+  const handleTabClick = (id: string) => {
+    const target = id === 'reports' ? 'analytics' : id;
+    if (setActiveTab) setActiveTab(target);
+    if (onNavigate) onNavigate(target);
+  };
 
   return (
     <>
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sticky top-0 z-30 shadow-sm">
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5 sticky top-0 z-30 shadow-sm space-y-2">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           {/* LEFT: Logo & Tagline */}
           <div className="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
-            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onNavigate && onNavigate('landing')}>
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => handleTabClick('landing')}>
               <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-md shadow-emerald-600/20">
                 <Leaf className="w-6 h-6 text-white stroke-[2.5]" />
               </div>
@@ -95,6 +113,26 @@ export const Header: React.FC<HeaderProps> = ({ viewMode, setViewMode, onNavigat
               <span className="hidden sm:inline">Fleet Account</span>
             </div>
           </div>
+        </div>
+
+        {/* TOP NAVIGATION MENU BAR (HORIZONTAL BUTTONS) */}
+        <div className="border-t border-slate-200/60 pt-2 pb-0.5 max-w-7xl mx-auto flex items-center justify-start overflow-x-auto gap-2 text-xs">
+          {menuItems.map((item) => {
+            const isActive = activeTab === item.id || (item.id === 'reports' && activeTab === 'analytics');
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleTabClick(item.id)}
+                className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20 scale-[1.02]'
+                    : 'bg-slate-100/90 text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 border border-slate-200/80 font-bold'
+                }`}
+              >
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
       </header>
 

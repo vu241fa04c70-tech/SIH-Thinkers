@@ -18,7 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 p-4 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4rem)] shadow-sm">
+    <aside className="w-64 bg-white/90 backdrop-blur-md border-r border-slate-200/80 p-4 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4rem)] shadow-sm sticky top-16">
       <div className="space-y-2">
         <div className="px-3 py-2 text-xs font-extrabold text-emerald-700 uppercase tracking-wider">
           GreenFleet Menu

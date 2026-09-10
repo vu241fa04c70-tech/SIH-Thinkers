@@ -1,5 +1,9 @@
 import numpy as np
-from backend.app.utils.helpers import haversine_distance_km
+
+try:
+    from app.utils.helpers import haversine_distance_km
+except ModuleNotFoundError:
+    from backend.app.utils.helpers import haversine_distance_km
 
 class RouteOptimizer:
     """
