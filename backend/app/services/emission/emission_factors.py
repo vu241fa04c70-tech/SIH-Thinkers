@@ -1,43 +1,55 @@
 """
-IPCC & DEFRA standard Greenhouse Gas Emission Factors
-Well-to-Wheel (WTW) factors include Tank-to-Wheel (combustion) + Well-to-Tank (production & distribution).
+IPCC 2026 & SIH PS 26138 Emission Factors
+Includes Maritime & Land Transport alternative fuels:
+- Diesel & Heavy Fuel Oil
+- LNG (Liquefied Natural Gas)
+- Methanol (Green E-Methanol)
+- Hydrogen (Green H2)
+- Ammonia (Green NH3)
+- Shore Power (Grid electricity at port)
 """
 
 EMISSION_FACTORS = {
     "diesel": {
-        "co2_per_liter": 2.68,       # kg CO2/liter (Tank-to-wheel)
-        "ch4_factor": 0.0001,        # kg CH4/liter
-        "n2o_factor": 0.0001,        # kg N2O/liter
-        "wtw_multiplier": 1.20,      # Well-to-wheel total factor (20% WTT upstream)
-        "gwp_ch4": 28,               # Global Warming Potential (100-year)
-        "gwp_n2o": 265,              # Global Warming Potential
+        "co2_per_unit": 2.68,       # kg CO2/liter
+        "ch4_factor": 0.0001,
+        "n2o_factor": 0.0001,
+        "wtw_multiplier": 1.20,
         "unit": "liter"
     },
-    "petrol": {
-        "co2_per_liter": 2.31,
-        "ch4_factor": 0.0002,
-        "n2o_factor": 0.00008,
-        "wtw_multiplier": 1.18,
-        "gwp_ch4": 28,
-        "gwp_n2o": 265,
-        "unit": "liter"
-    },
-    "cng": {
-        "co2_per_kg": 2.75,
-        "ch4_factor": 0.0005,
+    "lng": {
+        "co2_per_unit": 2.75,       # kg CO2/kg LNG
+        "ch4_factor": 0.0012,       # Methane slip factor
         "n2o_factor": 0.00005,
-        "wtw_multiplier": 1.15,
-        "gwp_ch4": 28,
-        "gwp_n2o": 265,
+        "wtw_multiplier": 1.12,
         "unit": "kg"
     },
-    "electric": {
-        "co2_per_kwh": 0.82,         # Grid emission factor (India grid average kg CO2/kWh)
+    "methanol": {
+        "co2_per_unit": 1.37,       # kg CO2/kg E-Methanol
+        "ch4_factor": 0.00005,
+        "n2o_factor": 0.00002,
+        "wtw_multiplier": 1.05,
+        "unit": "kg"
+    },
+    "hydrogen": {
+        "co2_per_unit": 0.0,        # Zero direct tailpipe emissions
+        "ch4_factor": 0.0,
+        "n2o_factor": 0.0,
+        "wtw_multiplier": 1.02,     # Green H2 electrolysis upstream
+        "unit": "kg"
+    },
+    "ammonia": {
+        "co2_per_unit": 0.0,        # Zero CO2 direct
+        "ch4_factor": 0.0,
+        "n2o_factor": 0.00015,       # Trace N2O combustion factor
+        "wtw_multiplier": 1.04,
+        "unit": "kg"
+    },
+    "shore_power": {
+        "co2_per_unit": 0.82,       # kg CO2/kWh
         "ch4_factor": 0.00002,
         "n2o_factor": 0.00001,
-        "wtw_multiplier": 1.08,      # Transmission loss factor
-        "gwp_ch4": 28,
-        "gwp_n2o": 265,
+        "wtw_multiplier": 1.08,
         "unit": "kWh"
     }
 }

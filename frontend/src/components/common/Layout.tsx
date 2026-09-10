@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { AiAssistantWidget } from './AiAssistantWidget';
 
 interface LayoutProps {
   children: (activeTab: string, setActiveTab: (tab: string) => void) => React.ReactNode;
@@ -36,7 +36,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           { id: 'government-incentives', label: 'Gov Incentives' },
           { id: 'eco-challenge', label: 'Eco Challenge' },
           { id: 'route-risk-meter', label: 'Route Risk Meter' },
-          { id: 'reports', label: 'Reports' },
+          { https://github.com/vu241fa04c70-tech/SIH-Thinkers/pull/2/conflict?name=frontend%252Fsrc%252Fcomponents%252Fcommon%252FLayout.tsx&ancestor_oid=eab9ac03721abc7f47339012d96c1ff60bc784cc&base_oid=e46b1ec0c05ec163af871f8e1a704314faaee033&head_oid=ffacd3df6c9b43ab163da7633cd783563b6e16fdid: 'reports', label: 'Reports' },
           { id: 'settings', label: 'Settings' }
         ].map(item => (
           <button

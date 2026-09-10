@@ -10,6 +10,7 @@ export interface RouteWaypoint {
   lat: number;
   lng: number;
   name: string;
+  demand_kg?: number;
 }
 
 export interface RouteSegment {

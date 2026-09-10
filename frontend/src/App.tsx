@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from './components/common/Layout';
+import { LandingPage } from './components/landing/LandingPage';
 import { DashboardOverview } from './components/dashboard/DashboardOverview';
 import { RouteOptimizationPage } from './components/route-optimization/RouteOptimizationPage';
 import { CarbonPassportPage } from './components/carbon-passport/CarbonPassportPage';
@@ -13,6 +14,17 @@ import { PerformanceAnalytics } from './components/analytics/PerformanceAnalytic
 import { SettingsPage } from './components/settings/SettingsPage';
 
 export const App: React.FC = () => {
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem('greenfleet_onboarding_seen');
+    if (!hasSeenOnboarding) {
+      setIsOnboardingOpen(true);
+      localStorage.setItem('greenfleet_onboarding_seen', 'true');
+    }
+  }, []);
+
   return (
     <Layout>
       {(activeTab, setActiveTab) => {

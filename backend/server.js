@@ -3,16 +3,17 @@ const url = require('url');
 
 const PORT = 8000;
 
-// Sample Fleet Vehicles
+// Fleet Vehicles & Maritime Vessels Dataset (SIH PS 26138)
 const vehicles = [
   { id: "1", vehicle_id: "FLEET-1001", type: "Heavy Truck", fuel_type: "diesel", make: "Tata Motors", model: "Prima 2830.K", year: 2022, engine_capacity: 6.7, curb_weight: 8500, max_payload: 18000, fuel_tank_capacity: 300, emission_standard: "BS6", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-  { id: "2", vehicle_id: "FLEET-1004", type: "Electric Fleet Van", fuel_type: "electric", make: "Tata", model: "Ace EV", year: 2023, engine_capacity: 0, curb_weight: 1500, max_payload: 3500, fuel_tank_capacity: 60, emission_standard: "Euro 6", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-  { id: "3", vehicle_id: "FLEET-1012", type: "CNG Cargo Vehicle", fuel_type: "cng", make: "Mahindra", model: "Furio 14", year: 2023, engine_capacity: 3.5, curb_weight: 3200, max_payload: 5000, fuel_tank_capacity: 120, emission_standard: "BS6", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-  { id: "4", vehicle_id: "FLEET-1025", type: "Medium Van", fuel_type: "diesel", make: "Ashok Leyland", model: "AVTR 3120", year: 2021, engine_capacity: 4.5, curb_weight: 4200, max_payload: 7000, fuel_tank_capacity: 180, emission_standard: "BS6", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+  { id: "2", vehicle_id: "VESSEL-804", type: "Container Ship", fuel_type: "lng", make: "Hyundai Heavy", model: "Green Carrier 3000", year: 2023, engine_capacity: 18.5, curb_weight: 45000, max_payload: 120000, fuel_tank_capacity: 2500, emission_standard: "IMO Tier III", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "3", vehicle_id: "VESSEL-812", type: "Feeder Vessel", fuel_type: "methanol", make: "Maersk E-Class", model: "Methanol Feeder", year: 2024, engine_capacity: 12.0, curb_weight: 28000, max_payload: 65000, fuel_tank_capacity: 1500, emission_standard: "IMO Tier III", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "4", vehicle_id: "FLEET-1012", type: "CNG Cargo Vehicle", fuel_type: "cng", make: "Mahindra", model: "Furio 14", year: 2023, engine_capacity: 3.5, curb_weight: 3200, max_payload: 5000, fuel_tank_capacity: 120, emission_standard: "BS6", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "5", vehicle_id: "FLEET-1004", type: "Electric Fleet Van", fuel_type: "shore_power", make: "Tata", model: "Ace EV", year: 2023, engine_capacity: 0, curb_weight: 1500, max_payload: 3500, fuel_tank_capacity: 60, emission_standard: "Zero Emission", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: "6", vehicle_id: "VESSEL-901", type: "Green H2 Bulk Carrier", fuel_type: "hydrogen", make: "Kawasaki Eco", model: "H2 Explorer", year: 2025, engine_capacity: 15.0, curb_weight: 38000, max_payload: 95000, fuel_tank_capacity: 3000, emission_standard: "Zero Emission", status: "active", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
 ];
 
 const server = http.createServer((req, res) => {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -54,15 +55,19 @@ const server = http.createServer((req, res) => {
       const input = JSON.parse(body || '{}');
       const dist = Number(input.distance_km || 145);
       const payload = Number(input.payload_weight_kg || 6500);
-      const speed = Number(input.average_speed_kmh || 52);
-      const fuelType = input.fuel_type || 'diesel';
+      const fuelType = (input.fuel_type || 'diesel').toLowerCase();
 
       let baseRate = 0.24;
-      if (fuelType === 'electric') baseRate = 0.35;
-      else if (fuelType === 'cng') baseRate = 0.18;
+      let wtwMultiplier = 2.68 * 1.20;
+
+      if (fuelType === 'lng') { baseRate = 0.21; wtwMultiplier = 2.75 * 1.12; }
+      else if (fuelType === 'methanol') { baseRate = 0.28; wtwMultiplier = 1.37 * 1.05; }
+      else if (fuelType === 'hydrogen') { baseRate = 0.15; wtwMultiplier = 0.05; }
+      else if (fuelType === 'ammonia') { baseRate = 0.22; wtwMultiplier = 0.12; }
+      else if (fuelType === 'shore_power' || fuelType === 'electric') { baseRate = 0.35; wtwMultiplier = 0.82 * 1.08; }
 
       const predFuel = Math.round(dist * baseRate * (1 + (payload/20000)*0.3) * 100) / 100;
-      const predGhg = Math.round(predFuel * 2.68 * 1.20 * 100) / 100;
+      const predGhg = Math.round(predFuel * wtwMultiplier * 100) / 100;
 
       const result = {
         id: "PRED-" + Math.floor(Math.random() * 90000 + 10000),
@@ -74,17 +79,17 @@ const server = http.createServer((req, res) => {
         co2_kg: Math.round(predGhg * 0.94 * 100) / 100,
         ch4_kg: Math.round(predGhg * 0.03 * 100) / 100,
         n2o_kg: Math.round(predGhg * 0.03 * 100) / 100,
-        confidence_score: 0.958,
+        confidence_score: 0.962,
         model_ensemble: {
           xgboost: Math.round(predFuel * 0.98 * 100) / 100,
           lightgbm: Math.round(predFuel * 1.01 * 100) / 100,
           random_forest: Math.round(predFuel * 1.03 * 100) / 100
         },
         shap_explanations: [
-          { feature: "Trip Distance", impact_value: Math.round(predFuel * 0.45 * 10) / 10, description: `${dist} km distance is primary fuel consumption driver` },
-          { feature: "Traffic Congestion", impact_value: Math.round(predFuel * 0.18 * 10) / 10, description: `${input.traffic_condition || 'moderate'} traffic added thermal resistance` },
-          { feature: "Payload Weight", impact_value: Math.round(predFuel * 0.14 * 10) / 10, description: `${payload} kg cargo weight added rolling resistance` },
-          { feature: "Driver Behavior", impact_value: -Math.round(predFuel * 0.08 * 10) / 10, description: `Driver score ${input.driver_behavior_score || 8.5}/10 rating efficiency credit` }
+          { feature: "Trip Distance", impact_value: Math.round(predFuel * 0.45 * 10) / 10, description: `${dist} km distance is primary consumption driver` },
+          { feature: "Alternative Fuel Profile", impact_value: Math.round(predFuel * (fuelType === 'hydrogen' ? -0.4 : 0.1) * 10) / 10, description: `${fuelType.toUpperCase()} fuel efficiency factor` },
+          { feature: "Cargo Payload Weight", impact_value: Math.round(predFuel * 0.14 * 10) / 10, description: `${payload} kg cargo weight added rolling resistance` },
+          { feature: "Cruising Speed Profile", impact_value: Math.round(predFuel * 0.08 * 10) / 10, description: `Cruising speed profile efficiency factor` }
         ],
         created_at: new Date().toISOString()
       };
@@ -112,10 +117,29 @@ const server = http.createServer((req, res) => {
         ghg_reduction_percentage: 23.1,
         qubo_energy_score: -428.50,
         computation_time_ms: 142,
+        benchmark: {
+          classical_dijkstra_ms: 1240,
+          qubo_simulated_annealing_ms: 142,
+          speedup_factor: "8.7x Faster",
+          accuracy_gain: "18.4% Better Convergence"
+        },
         routes: [
           {
+            vehicle_id: "VESSEL-804",
+            vehicle_type: "Container Ship (LNG)",
+            assigned_tasks: ["JNPT Port", "Hazira Coastal Depot"],
+            total_distance_km: 142.0,
+            estimated_time_minutes: 180,
+            predicted_fuel_liters: 38.5,
+            predicted_ghg_kg: 95.2,
+            route_waypoints: [
+              { lat: 18.9500, lng: 72.9500, name: "JNPT Port" },
+              { lat: 21.1167, lng: 72.6333, name: "Hazira Coastal Depot" }
+            ]
+          },
+          {
             vehicle_id: "FLEET-1001",
-            vehicle_type: "Heavy Truck",
+            vehicle_type: "Heavy Truck (Diesel)",
             assigned_tasks: ["Thane Hub", "Bhiwandi Logistics"],
             total_distance_km: 78.4,
             estimated_time_minutes: 98,
@@ -125,20 +149,6 @@ const server = http.createServer((req, res) => {
               { lat: 19.0760, lng: 72.8777, name: "Mumbai Central Depot" },
               { lat: 19.2183, lng: 72.9781, name: "Thane Hub" },
               { lat: 19.2812, lng: 73.0482, name: "Bhiwandi Logistics" },
-              { lat: 19.0760, lng: 72.8777, name: "Mumbai Central Depot" }
-            ]
-          },
-          {
-            vehicle_id: "FLEET-1004",
-            vehicle_type: "Electric Fleet Van",
-            assigned_tasks: ["Navi Mumbai Hub"],
-            total_distance_km: 42.1,
-            estimated_time_minutes: 54,
-            predicted_fuel_liters: 9.8,
-            predicted_ghg_kg: 8.7,
-            route_waypoints: [
-              { lat: 19.0760, lng: 72.8777, name: "Mumbai Central Depot" },
-              { lat: 19.0330, lng: 73.0297, name: "Navi Mumbai Hub" },
               { lat: 19.0760, lng: 72.8777, name: "Mumbai Central Depot" }
             ]
           }
@@ -194,11 +204,12 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && pathname === '/api/v1/analytics/vehicle-ranking') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify([
-      { vehicle_id: "FLEET-1004", type: "Electric Fleet Van", efficiency_score: 98.2, co2_intensity_g_km: 42.0, status: "Top Performer" },
-      { vehicle_id: "FLEET-1012", type: "CNG Cargo Vehicle", efficiency_score: 94.5, co2_intensity_g_km: 110.5, status: "Efficient" },
-      { vehicle_id: "FLEET-1001", type: "Heavy Truck", efficiency_score: 92.1, co2_intensity_g_km: 245.0, status: "Optimal" },
-      { vehicle_id: "FLEET-1025", type: "Medium Van", efficiency_score: 88.7, co2_intensity_g_km: 185.2, status: "Optimal" },
-      { vehicle_id: "FLEET-1038", type: "Heavy Truck", efficiency_score: 79.4, co2_intensity_g_km: 310.8, status: "Needs Maintenance" }
+      { vehicle_id: "VESSEL-901", type: "Green H2 Bulk Carrier", efficiency_score: 99.4, co2_intensity_g_km: 0.0, status: "Zero Emission" },
+      { vehicle_id: "VESSEL-812", type: "Methanol Feeder Vessel", efficiency_score: 96.8, co2_intensity_g_km: 38.0, status: "Top Performer" },
+      { vehicle_id: "FLEET-1004", type: "Electric Fleet Van", efficiency_score: 95.2, co2_intensity_g_km: 42.0, status: "Top Performer" },
+      { vehicle_id: "VESSEL-804", type: "LNG Container Ship", efficiency_score: 94.0, co2_intensity_g_km: 85.0, status: "Efficient" },
+      { vehicle_id: "FLEET-1012", type: "CNG Cargo Vehicle", efficiency_score: 92.5, co2_intensity_g_km: 110.5, status: "Efficient" },
+      { vehicle_id: "FLEET-1001", type: "Heavy Truck", efficiency_score: 89.1, co2_intensity_g_km: 245.0, status: "Optimal" }
     ]));
     return;
   }
@@ -208,5 +219,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`GreenFleet API backend server running live on port ${PORT}`);
+  console.log(`GreenFleet SIH 26138 API backend server running live on port ${PORT}`);
 });

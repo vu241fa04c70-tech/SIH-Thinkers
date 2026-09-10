@@ -22,6 +22,7 @@ export interface SinglePredictionResult {
   vehicle_type: string;
   fuel_type: string;
   distance_km: number;
+  average_speed_kmh?: number;
   predicted_fuel_liters: number;
   predicted_ghg_kg: number;
   co2_kg: number;

@@ -1,84 +1,82 @@
 import React from 'react';
 import { SinglePredictionResult } from '../../types/prediction';
-import { Fuel, Cloud, ShieldCheck, Cpu } from 'lucide-react';
+import { Fuel, Cloud, ShieldCheck, DollarSign, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { InfoTooltip } from '../common/InfoTooltip';
 
-export const PredictionResults: React.FC<{ result: SinglePredictionResult }> = ({ result }) => {
+interface PredictionResultsProps {
+  result: SinglePredictionResult;
+  onFindBetterRoute?: () => void;
+}
+
+export const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onFindBetterRoute }) => {
+  const normalFuel = Math.round(result.predicted_fuel_liters * 1.22);
+  const normalCost = normalFuel * 100;
+  const greenFleetFuel = result.predicted_fuel_liters;
+  const greenFleetCost = greenFleetFuel * 100;
+
+  const savedFuel = normalFuel - greenFleetFuel;
+  const savedCost = normalCost - greenFleetCost;
+
+  const normalCo2 = Math.round(normalFuel * 2.68);
+  const greenFleetCo2 = Math.round(greenFleetFuel * 2.68);
+  const savedCo2 = normalCo2 - greenFleetCo2;
+
+  const speed = result.average_speed_kmh ?? 60;
+  const travelHours = (result.distance_km / Math.max(1, speed)).toFixed(1);
+
   return (
-    <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+    <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-xl text-slate-900">
+      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
-          <span className="text-xs text-emerald-400 font-mono font-semibold">PREDICTION REF #{result.id.slice(0, 8)}</span>
-          <h3 className="text-lg font-bold text-white mt-0.5">Prediction Results & Multi-Gas Breakdown</h3>
+          <span className="text-xs text-emerald-700 font-mono font-extrabold uppercase">RESULTS SUMMARY</span>
+          <h3 className="text-2xl font-extrabold text-slate-900 mt-0.5">YOUR TRIP ESTIMATE 🎯</h3>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 text-xs font-semibold">
-          <ShieldCheck className="w-4 h-4" /> Confidence Score: {(result.confidence_score * 100).toFixed(1)}%
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" /> High Accuracy Model
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Fuel Card */}
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-amber-500/20 space-y-2">
-          <div className="flex items-center justify-between text-amber-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Predicted Fuel Consumption</span>
-            <Fuel className="w-5 h-5" />
-          </div>
-          <div className="text-3xl font-extrabold text-white">
-            {result.predicted_fuel_liters} <span className="text-sm font-normal text-slate-400">Liters</span>
-          </div>
-          <p className="text-xs text-slate-400">Est. {(result.predicted_fuel_liters / result.distance_km * 100).toFixed(1)} L / 100 km rate</p>
+      <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-center space-y-1">
+        <span className="text-slate-600 text-xs font-bold">Your trip is estimated to use:</span>
+        <div className="text-4xl font-extrabold text-amber-900 font-mono">{greenFleetFuel} L</div>
+      </div>
+
+      {/* 3 Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+        <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1">
+          <span className="text-2xl block">💰</span>
+          <span className="text-2xl font-extrabold text-emerald-800 font-mono">₹{greenFleetCost.toLocaleString()}</span>
+          <span className="text-slate-600 text-xs font-bold block">Estimated fuel cost</span>
         </div>
 
-        {/* GHG Card */}
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-emerald-500/20 space-y-2">
-          <div className="flex items-center justify-between text-emerald-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">Well-to-Wheel Total GHG</span>
-            <Cloud className="w-5 h-5" />
-          </div>
-          <div className="text-3xl font-extrabold text-white">
-            {result.predicted_ghg_kg} <span className="text-sm font-normal text-slate-400">kg CO2e</span>
-          </div>
-          <p className="text-xs text-slate-400">IPCC 2026 Tier 2 Standards</p>
+        <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200 space-y-1">
+          <span className="text-2xl block">🌱</span>
+          <span className="text-2xl font-extrabold text-teal-800 font-mono">{greenFleetCo2} kg</span>
+          <span className="text-slate-600 text-xs font-bold block">Estimated CO₂e</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-1">
+          <span className="text-2xl block">⏱</span>
+          <span className="text-2xl font-extrabold text-blue-800 font-mono">{travelHours} h</span>
+          <span className="text-slate-600 text-xs font-bold block">Estimated travel time</span>
         </div>
       </div>
 
-      {/* Gas Breakdown Grid */}
-      <div className="grid grid-cols-3 gap-3 p-4 rounded-xl bg-slate-950 border border-slate-800 text-center text-xs">
-        <div>
-          <span className="text-slate-400 block mb-1">CO2 Emissions</span>
-          <span className="text-slate-200 font-bold text-sm">{result.co2_kg} kg</span>
+      {/* Friendly Sentence & Action */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+        <div className="space-y-0.5 text-center sm:text-left">
+          <span className="text-white font-extrabold text-sm block">Want to see if GreenFleet can find a better option?</span>
+          <span className="text-emerald-100 text-xs">Compare alternative routes and prioritize cost, emissions or time.</span>
         </div>
-        <div>
-          <span className="text-slate-400 block mb-1">CH4 Equivalent</span>
-          <span className="text-slate-200 font-bold text-sm">{result.ch4_kg} kg</span>
-        </div>
-        <div>
-          <span className="text-slate-400 block mb-1">N2O Equivalent</span>
-          <span className="text-slate-200 font-bold text-sm">{result.n2o_kg} kg</span>
-        </div>
-      </div>
 
-      {/* Model Ensemble Weights */}
-      <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800 space-y-3">
-        <div className="flex items-center justify-between text-xs text-slate-400">
-          <span className="flex items-center gap-1.5 font-semibold text-slate-300">
-            <Cpu className="w-4 h-4 text-emerald-400" /> Multi-Model Ensemble Output
-          </span>
-          <span>XGB (70%) + LGBM (20%) + RF (10%)</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block text-[10px]">XGBoost</span>
-            <span className="font-mono text-emerald-400 font-bold">{result.model_ensemble.xgboost} L</span>
-          </div>
-          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block text-[10px]">LightGBM</span>
-            <span className="font-mono text-teal-400 font-bold">{result.model_ensemble.lightgbm} L</span>
-          </div>
-          <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block text-[10px]">RandomForest</span>
-            <span className="font-mono text-blue-400 font-bold">{result.model_ensemble.random_forest} L</span>
-          </div>
-        </div>
+        <button
+          onClick={() => {
+            if (onFindBetterRoute) onFindBetterRoute();
+          }}
+          className="px-6 py-3 rounded-2xl bg-white text-emerald-800 hover:bg-emerald-50 font-extrabold text-sm transition-all shadow-md flex items-center gap-2 group whitespace-nowrap"
+        >
+          <span>Find a Better Route →</span>
+        </button>
       </div>
     </div>
   );

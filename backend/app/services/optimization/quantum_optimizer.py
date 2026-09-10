@@ -1,10 +1,17 @@
 import uuid
 import numpy as np
 from datetime import datetime
-from backend.app.services.optimization.qubo_solver import QUBOSolver
-from backend.app.services.optimization.route_optimizer import RouteOptimizer
-from backend.app.services.prediction.fuel_predictor import FuelPredictorService
-from backend.app.services.emission.ghg_calculator import GHGCalculator
+
+try:
+    from app.services.optimization.qubo_solver import QUBOSolver
+    from app.services.optimization.route_optimizer import RouteOptimizer
+    from app.services.prediction.fuel_predictor import FuelPredictorService
+    from app.services.emission.ghg_calculator import GHGCalculator
+except ModuleNotFoundError:
+    from backend.app.services.optimization.qubo_solver import QUBOSolver
+    from backend.app.services.optimization.route_optimizer import RouteOptimizer
+    from backend.app.services.prediction.fuel_predictor import FuelPredictorService
+    from backend.app.services.emission.ghg_calculator import GHGCalculator
 
 class QuantumInspiredOptimizerService:
     """
