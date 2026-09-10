@@ -5,6 +5,10 @@ import { DashboardOverview } from './components/dashboard/DashboardOverview';
 import { VehicleList } from './components/fleet/VehicleList';
 import { PredictionForm } from './components/prediction/PredictionForm';
 import { RouteVisualization } from './components/optimization/RouteVisualization';
+import { CarbonPassport } from './components/passport/CarbonPassport';
+import { GovernmentIncentives } from './components/incentives/GovernmentIncentives';
+import { RouteRiskMeter } from './components/risk/RouteRiskMeter';
+import { EcoChallenge } from './components/challenge/EcoChallenge';
 import { PerformanceAnalytics } from './components/analytics/PerformanceAnalytics';
 import { AboutPage } from './components/about/AboutPage';
 import { OnboardingModal } from './components/common/OnboardingModal';
@@ -44,16 +48,6 @@ export const App: React.FC = () => {
                   );
                 case 'overview':
                   return <DashboardOverview viewMode={viewMode} />;
-                case 'fleet':
-                  return (
-                    <VehicleList
-                      viewMode={viewMode}
-                      onSelectVehicleForTrip={(vehicle) => {
-                        setSelectedVehicle(vehicle);
-                        setActiveTab('predictions');
-                      }}
-                    />
-                  );
                 case 'predictions':
                   return (
                     <PredictionForm
@@ -63,7 +57,16 @@ export const App: React.FC = () => {
                   );
                 case 'optimization':
                   return <RouteVisualization viewMode={viewMode} />;
+                case 'passport':
+                  return <CarbonPassport viewMode={viewMode} />;
+                case 'incentives':
+                  return <GovernmentIncentives viewMode={viewMode} />;
+                case 'challenge':
+                  return <EcoChallenge viewMode={viewMode} />;
+                case 'risk':
+                  return <RouteRiskMeter viewMode={viewMode} />;
                 case 'analytics':
+                case 'reports':
                   return <PerformanceAnalytics viewMode={viewMode} />;
                 case 'about':
                   return <AboutPage viewMode={viewMode} />;

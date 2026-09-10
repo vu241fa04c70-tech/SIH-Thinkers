@@ -10,6 +10,7 @@ import {
   Droplets, RefreshCw, BarChart2, Info, Flame, Sun, AlertTriangle
 } from 'lucide-react';
 import { LoadingSpinner } from '../common/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface PredictionFormProps {
   viewMode?: 'simple' | 'technical';
@@ -17,6 +18,7 @@ interface PredictionFormProps {
 }
 
 export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simple', initialVehicle }) => {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SinglePredictionResult | null>(null);
   const [activeWizardStep, setActiveWizardStep] = useState(1);
@@ -82,7 +84,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
       setActiveWizardStep(4);
     } catch (err) {
       console.error(err);
-      alert("Prediction calculation failed.");
+      alert(t('predictionFailed', 'Prediction calculation failed.'));
     } finally {
       setLoading(false);
     }
@@ -95,14 +97,13 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
         <div className="space-y-2 max-w-xl z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/80 border border-emerald-300 text-xs font-bold text-emerald-800">
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Guided Trip Assistant</span>
+            <span>{t('guidedTripAssistant', 'Guided Trip Assistant')}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-            <span>Plan Your Trip</span>
-            <span className="text-3xl">🚚</span>
+            <span>{t('planTrip')}</span>
           </h1>
           <p className="text-sm text-slate-600 font-medium leading-relaxed">
-            Get real-time fuel prices, weather conditions and AI-powered fuel & emission estimates.
+            {t('planTripDesc', 'Get real-time fuel prices, weather conditions and AI-powered fuel & emission estimates.')}
           </p>
         </div>
 
@@ -124,11 +125,11 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
           {/* Right Leaf Badge */}
           <div className="z-10 bg-white/95 backdrop-blur p-3 rounded-2xl border border-white text-slate-900 space-y-0.5 text-right shadow-xl">
             <span className="text-xs font-extrabold block text-emerald-800 flex items-center justify-end gap-1">
-              <span>Cleaner Routes</span>
+              <span>{t('cleanerRoutes', 'Cleaner Routes')}</span>
               <LeafIcon className="w-3.5 h-3.5 text-emerald-600" />
             </span>
-            <span className="text-[11px] font-bold text-slate-700 block">Greener Future</span>
-            <span className="text-[11px] font-extrabold text-emerald-700 block">Lower Costs</span>
+            <span className="text-[11px] font-bold text-slate-700 block">{t('greenerFuture', 'Greener Future')}</span>
+            <span className="text-[11px] font-extrabold text-emerald-700 block">{t('lowerCosts', 'Lower Costs')}</span>
           </div>
         </div>
       </div>
@@ -144,8 +145,8 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                   <Fuel className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-slate-900">Real-Time Fuel Prices</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">Live prices from government & oil company APIs (₹ per unit)</p>
+                  <h3 className="font-extrabold text-sm text-slate-900">{t('rtFuelPrices')}</h3>
+                  <p className="text-[11px] text-slate-700 font-medium">{t('rtFuelSub')}</p>
                 </div>
               </div>
 
@@ -156,15 +157,15 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                   className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-500 shadow-sm"
                 >
                   {fuelRegions.map((r) => (
-                    <option key={r} value={r}>📍 {r}</option>
+                    <option key={r} value={r}>📍 {t(r, r)}</option>
                   ))}
                 </select>
               </div>
             </div>
 
-            <div className="flex items-center justify-end text-[10px] text-slate-400 font-medium gap-1">
+            <div className="flex items-center justify-end text-[10px] text-slate-700 font-medium gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Last updated: 12 Sep 2025, 03:28 PM</span>
+              <span>{t('lastUpdatedText', 'Last updated: 12 Sep 2025, 03:28 PM')}</span>
             </div>
 
             {/* 6 FUEL CARDS HORIZONTAL GRID */}
@@ -172,17 +173,17 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               {/* DIESEL */}
               <div className="p-2.5 rounded-2xl bg-red-50/50 border border-red-200 space-y-1 shadow-sm">
                 <span className="text-xl block">⛽</span>
-                <span className="font-extrabold text-slate-900 block text-xs">Diesel</span>
+                <span className="font-extrabold text-slate-900 block text-xs">{t('diesel')}</span>
                 <span className="font-extrabold text-red-700 block font-mono text-sm">₹95.65</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ Liter (IOCL)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perLiterIocl', '/ Liter (IOCL)')}</span>
               </div>
 
               {/* PETROL */}
               <div className="p-2.5 rounded-2xl bg-emerald-50/50 border border-emerald-200 space-y-1 shadow-sm">
                 <span className="text-xl block">⛽</span>
-                <span className="font-extrabold text-slate-900 block text-xs">Petrol</span>
+                <span className="font-extrabold text-slate-900 block text-xs">{t('petrol', 'Petrol')}</span>
                 <span className="font-extrabold text-emerald-700 block font-mono text-sm">₹109.32</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ Liter (HPCL)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perLiterHpcl', '/ Liter (HPCL)')}</span>
               </div>
 
               {/* CNG */}
@@ -190,38 +191,38 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                 <span className="text-xl block">🔥</span>
                 <span className="font-extrabold text-slate-900 block text-xs">CNG</span>
                 <span className="font-extrabold text-blue-700 block font-mono text-sm">₹82.00</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ kg (IGL)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perKgIgl', '/ kg (IGL)')}</span>
               </div>
 
               {/* LNG */}
               <div className="p-2.5 rounded-2xl bg-teal-50/50 border border-teal-200 space-y-1 shadow-sm">
                 <span className="text-xl block">💧</span>
-                <span className="font-extrabold text-slate-900 block text-xs">LNG</span>
+                <span className="font-extrabold text-slate-900 block text-xs">{t('lng')}</span>
                 <span className="font-extrabold text-teal-700 block font-mono text-sm">₹68.50</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ kg (GAIL)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perKgGail', '/ kg (GAIL)')}</span>
               </div>
 
               {/* METHANOL */}
               <div className="p-2.5 rounded-2xl bg-purple-50/50 border border-purple-200 space-y-1 shadow-sm">
                 <span className="text-xl block">🧪</span>
-                <span className="font-extrabold text-slate-900 block text-xs">Methanol</span>
+                <span className="font-extrabold text-slate-900 block text-xs">{t('methanol')}</span>
                 <span className="font-extrabold text-purple-700 block font-mono text-sm">₹56.20</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ Liter (Indicative)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perLiterIndicative', '/ Liter (Indicative)')}</span>
               </div>
 
               {/* HYDROGEN */}
               <div className="p-2.5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-1 shadow-sm">
                 <span className="text-xl block">⚡</span>
-                <span className="font-extrabold text-slate-900 block text-xs">Hydrogen</span>
+                <span className="font-extrabold text-slate-900 block text-xs">{t('hydrogen')}</span>
                 <span className="font-extrabold text-amber-700 block font-mono text-sm">₹410.00</span>
-                <span className="text-[9px] text-slate-500 block font-medium">/ kg (Indicative)</span>
+                <span className="text-[9px] text-slate-700 block font-medium">{t('perKgIndicative', '/ kg (Indicative)')}</span>
               </div>
             </div>
           </div>
 
           <div className="p-3 rounded-2xl bg-blue-50/60 border border-blue-200 text-[11px] text-blue-900 flex items-center gap-2 font-medium">
             <Info className="w-4 h-4 text-blue-600 shrink-0" />
-            <span>Prices are updated in real-time from official sources (IOCL, HPCL, BPCL, IGL, GAIL) and may vary by location.</span>
+            <span>{t('fuelPriceNote', 'Prices are updated in real-time from official sources (IOCL, HPCL, BPCL, IGL, GAIL) and may vary by location.')}</span>
           </div>
         </div>
 
@@ -234,8 +235,8 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                   <CloudRain className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-slate-900">Live Weather & Route Conditions</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">Real-time data from Open-Meteo API</p>
+                  <h3 className="font-extrabold text-sm text-slate-900">{t('rtWeatherTitle')}</h3>
+                  <p className="text-[11px] text-slate-700 font-medium">{t('rtWeatherSub')}</p>
                 </div>
               </div>
 
@@ -246,7 +247,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                   className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-bold text-slate-900 focus:border-blue-500 shadow-sm"
                 >
                   {cities.map((c) => (
-                    <option key={c} value={c}>📍 {c}</option>
+                    <option key={c} value={c}>📍 {t(c, c)}</option>
                   ))}
                 </select>
                 <button
@@ -258,9 +259,9 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               </div>
             </div>
 
-            <div className="flex items-center justify-end text-[10px] text-slate-400 font-medium gap-1">
+            <div className="flex items-center justify-end text-[10px] text-slate-700 font-medium gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Last updated: 12 Sep 2025, 03:28 PM</span>
+              <span>{t('lastUpdatedText', 'Last updated: 12 Sep 2025, 03:28 PM')}</span>
             </div>
 
             {/* 8 WEATHER METRIC BOXES GRID */}
@@ -268,73 +269,73 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               {/* Temperature */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-red-600 font-bold text-[10px]">
-                  <Thermometer className="w-3.5 h-3.5" /> Temperature
+                  <Thermometer className="w-3.5 h-3.5" /> {t('tempLabel', 'Temperature')}
                 </div>
                 <span className="text-base font-extrabold text-slate-900 font-mono block">29°C</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Feels like 32°C</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('feelsLike32', 'Feels like 32°C')}</span>
               </div>
 
               {/* Humidity */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-blue-600 font-bold text-[10px]">
-                  <Droplets className="w-3.5 h-3.5" /> Humidity
+                  <Droplets className="w-3.5 h-3.5" /> {t('humidityLabel', 'Humidity')}
                 </div>
                 <span className="text-base font-extrabold text-slate-900 font-mono block">62%</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Moderate</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('moderateLabel', 'Moderate')}</span>
               </div>
 
               {/* Wind Speed */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-teal-600 font-bold text-[10px]">
-                  <Wind className="w-3.5 h-3.5" /> Wind Speed
+                  <Wind className="w-3.5 h-3.5" /> {t('windSpeed', 'Wind Speed')}
                 </div>
                 <span className="text-base font-extrabold text-slate-900 font-mono block">14 km/h</span>
-                <span className="text-[10px] text-slate-500 block font-medium">SW (210°)</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('dirSw', 'SW (210°)')}</span>
               </div>
 
               {/* Conditions */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-amber-600 font-bold text-[10px]">
-                  <Sun className="w-3.5 h-3.5" /> Conditions
+                  <Sun className="w-3.5 h-3.5" /> {t('conditionsLabel', 'Conditions')}
                 </div>
-                <span className="text-base font-extrabold text-slate-900 block truncate">Clear</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Sunny</span>
+                <span className="text-base font-extrabold text-slate-900 block truncate">{t('clearCond', 'Clear')}</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('sunnyCond', 'Sunny')}</span>
               </div>
 
               {/* Rain Chance */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-blue-600 font-bold text-[10px]">
-                  <CloudRain className="w-3.5 h-3.5" /> Rain Chance
+                  <CloudRain className="w-3.5 h-3.5" /> {t('rainChance', 'Rain Chance')}
                 </div>
                 <span className="text-base font-extrabold text-slate-900 font-mono block">0%</span>
-                <span className="text-[10px] text-slate-500 block font-medium">No rain expected</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('noRainExpected', 'No rain expected')}</span>
               </div>
 
               {/* Road Condition */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-slate-700 font-bold text-[10px]">
-                  🛣️ Road Condition
+                  🛣️ {t('roadCondition', 'Road Condition')}
                 </div>
-                <span className="text-xs font-extrabold text-slate-900 block truncate">Dry & Clear</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Good for driving</span>
+                <span className="text-xs font-extrabold text-slate-900 block truncate">{t('dryAndClear', 'Dry & Clear')}</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('goodForDriving', 'Good for driving')}</span>
               </div>
 
               {/* Sea State */}
               <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-cyan-600 font-bold text-[10px]">
-                  🌊 Sea State (if marine)
+                  🌊 {t('seaStateMarine', 'Sea State (if marine)')}
                 </div>
-                <span className="text-xs font-extrabold text-slate-900 block truncate">Calm</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Wave height: 0.3 m</span>
+                <span className="text-xs font-extrabold text-slate-900 block truncate">{t('calmState', 'Calm')}</span>
+                <span className="text-[10px] text-slate-700 block font-medium">{t('waveHeight03', 'Wave height: 0.3 m')}</span>
               </div>
 
               {/* Weather Fuel Impact Badge */}
               <div className="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-0.5 shadow-sm">
                 <div className="flex items-center gap-1 text-emerald-800 font-bold text-[10px]">
-                  🍃 Weather Fuel Impact
+                  🍃 {t('weatherImpact', 'Weather Fuel Impact')}
                 </div>
-                <span className="text-base font-extrabold text-emerald-700 font-mono block">+2% Fuel</span>
-                <span className="text-[10px] text-emerald-800 block font-medium">Normal conditions</span>
+                <span className="text-base font-extrabold text-emerald-700 font-mono block">{t('plus2Fuel', '+2% Fuel')}</span>
+                <span className="text-[10px] text-emerald-800 block font-medium">{t('normalConditions', 'Normal conditions')}</span>
               </div>
             </div>
           </div>
@@ -345,11 +346,11 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
       <div className="p-4 rounded-3xl bg-white border border-slate-200 overflow-x-auto shadow-sm">
         <div className="flex items-center justify-between min-w-[700px] text-xs font-extrabold">
           {[
-            { step: 1, title: '1 Vehicle' },
-            { step: 2, title: '2 Fuel' },
-            { step: 3, title: '3 Trip & Conditions' },
-            { step: 4, title: '4 Prediction' },
-            { step: 5, title: '5 Recommendation' }
+            { step: 1, title: `1 ${t('wizStep1', 'Vehicle')}` },
+            { step: 2, title: `2 ${t('wizStep2', 'Fuel')}` },
+            { step: 3, title: `3 ${t('wizStep3', 'Trip & Conditions')}` },
+            { step: 4, title: `4 ${t('wizStep4', 'Prediction')}` },
+            { step: 5, title: `5 ${t('wizStep5', 'Recommendation')}` }
           ].map((item, idx) => (
             <React.Fragment key={item.step}>
               <button
@@ -366,7 +367,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                 </span>
                 <span>{item.title}</span>
               </button>
-              {idx < 4 && <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />}
+              {idx < 4 && <ArrowRight className="w-4 h-4 text-slate-700 shrink-0" />}
             </React.Fragment>
           ))}
         </div>
@@ -382,9 +383,9 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               <div className="space-y-1 border-b border-slate-100 pb-3">
                 <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
                   <span className="p-1.5 rounded-xl bg-blue-100 text-blue-600">🚚</span>
-                  <span>STEP 1: What are you driving?</span>
+                  <span>{t('step1Driving')}</span>
                 </h3>
-                <p className="text-xs text-slate-500 font-medium">Select your vehicle type to get started.</p>
+                <p className="text-xs text-slate-700 font-medium">{t('step1Sub')}</p>
               </div>
 
               {/* VEHICLE CATEGORY TABS */}
@@ -398,7 +399,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                       : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
                   }`}
                 >
-                  🚚 Road Vehicles
+                  {t('roadVehicles')}
                 </button>
                 <button
                   type="button"
@@ -409,17 +410,17 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                       : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
                   }`}
                 >
-                  🚢 Marine Vessels
+                  {t('marineVessels')}
                 </button>
               </div>
 
               {/* 4 VEHICLE SELECTION CARDS */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-extrabold">
                 {[
-                  { label: 'Heavy Truck', icon: '🚚', val: 'Heavy Cargo Truck' },
-                  { label: 'Delivery Van', icon: '🚐', val: 'Electric Fleet Van' },
-                  { label: 'Cargo Truck', icon: '📦', val: 'Medium Cargo Truck' },
-                  { label: 'Bus', icon: '🚌', val: 'Passenger Fleet Bus' }
+                  { label: t('heavyCargoTruck', 'Heavy Cargo Truck'), icon: '🚚', val: 'Heavy Cargo Truck' },
+                  { label: t('electricFleetVan', 'Electric Fleet Van'), icon: '🚐', val: 'Electric Fleet Van' },
+                  { label: t('mediumCargoTruck', 'Medium Cargo Truck'), icon: '📦', val: 'Medium Cargo Truck' },
+                  { label: t('passengerFleetBus', 'Passenger Fleet Bus'), icon: '🚌', val: 'Passenger Fleet Bus' }
                 ].map((v) => (
                   <button
                     key={v.label}
@@ -444,16 +445,16 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
             {/* STEP 2: FUEL SELECTION */}
             <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-md">
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <span>⛽ STEP 2: What fuel are you using?</span>
+                <span>⛽ {t('step2Fuel')}</span>
               </h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs font-bold">
                 {[
-                  { label: 'Diesel', icon: '⛽', val: 'diesel', rate: '₹95.65/L' },
-                  { label: 'LNG', icon: '🔥', val: 'lng', rate: '₹68.50/kg' },
-                  { label: 'Methanol', icon: '🧪', val: 'methanol', rate: '₹56.20/L' },
-                  { label: 'Hydrogen', icon: '⚡', val: 'hydrogen', rate: '₹410.00/kg' },
-                  { label: 'Electric', icon: '⚡', val: 'electric', rate: '₹9.50/kWh' }
+                  { label: t('diesel'), icon: '⛽', val: 'diesel', rate: '₹95.65/L' },
+                  { label: t('lng'), icon: '🔥', val: 'lng', rate: '₹68.50/kg' },
+                  { label: t('methanol'), icon: '🧪', val: 'methanol', rate: '₹56.20/L' },
+                  { label: t('hydrogen'), icon: '⚡', val: 'hydrogen', rate: '₹410.00/kg' },
+                  { label: t('shorePower'), icon: '⚡', val: 'electric', rate: '₹9.50/kWh' }
                 ].map((fuel) => (
                   <button
                     key={fuel.val}
@@ -467,7 +468,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                   >
                     <span className="text-xl block mb-1">{fuel.icon}</span>
                     <span className="font-extrabold block">{fuel.label}</span>
-                    <span className="text-[10px] text-slate-500 font-mono block">{fuel.rate}</span>
+                    <span className="text-[10px] text-slate-700 font-mono block">{fuel.rate}</span>
                   </button>
                 ))}
               </div>
@@ -476,12 +477,12 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
             {/* STEP 3: TRIP DETAILS */}
             <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-md">
               <h3 className="text-base font-extrabold text-slate-900">
-                <span>📍 STEP 3: Trip Details & Conditions</span>
+                <span>📍 {t('step3Trip')}</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium">
                 <div className="space-y-1">
-                  <label className="text-slate-800 font-extrabold block">📍 How far are you travelling (km)?</label>
+                  <label className="text-slate-800 font-extrabold block">{t('howFar')}</label>
                   <input
                     type="number"
                     value={inputData.distance_km}
@@ -491,7 +492,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-slate-800 font-extrabold block">📦 Cargo payload (kg)?</label>
+                  <label className="text-slate-800 font-extrabold block">{t('cargoPayload')}</label>
                   <input
                     type="number"
                     value={inputData.payload_weight_kg}
@@ -508,7 +509,7 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               disabled={loading}
               className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base transition-all shadow-xl shadow-emerald-600/20 flex items-center justify-center gap-2 group"
             >
-              <span>✨ Calculate My Trip</span>
+              <span>{t('calculateTrip')}</span>
             </button>
           </form>
         </div>
@@ -520,8 +521,8 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               <div className="flex items-center gap-2">
                 <BarChart2 className="w-5 h-5 text-emerald-600" />
                 <div>
-                  <h3 className="font-extrabold text-sm text-slate-900">Your Trip Estimate</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">GreenFleet is estimating your trip live.</p>
+                  <h3 className="font-extrabold text-sm text-slate-900">{t('yourTripEstimate')}</h3>
+                  <p className="text-[11px] text-slate-700 font-medium">{t('estimatingLive')}</p>
                 </div>
               </div>
             </div>
@@ -531,10 +532,10 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               <Zap className="w-5 h-5 text-emerald-600 shrink-0" />
               <div>
                 <span className="block font-extrabold flex items-center gap-1.5 text-emerald-800">
-                  <span>AI Ready</span>
+                  <span>{t('aiReady')}</span>
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 </span>
-                <span className="text-[11px] text-emerald-800 font-medium block">Fill in the details to see fuel, cost and emissions prediction.</span>
+                <span className="text-[11px] text-emerald-800 font-medium block">{t('fillDetails')}</span>
               </div>
             </div>
 
@@ -543,25 +544,25 @@ export const PredictionForm: React.FC<PredictionFormProps> = ({ viewMode = 'simp
               <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-1">
                 <span className="text-2xl block">⛽</span>
                 <span className="text-2xl font-extrabold text-slate-900 font-mono">{liveFuelEst} L</span>
-                <span className="text-[10px] text-slate-600 block font-bold">Estimated fuel</span>
+                <span className="text-[10px] text-slate-600 block font-bold">{t('estFuel')}</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1">
                 <span className="text-2xl block">💰</span>
                 <span className="text-2xl font-extrabold text-emerald-800 font-mono">₹{liveCostEst.toLocaleString()}</span>
-                <span className="text-[10px] text-slate-600 block font-bold">Estimated cost</span>
+                <span className="text-[10px] text-slate-600 block font-bold">{t('estCost')}</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200 space-y-1">
                 <span className="text-2xl block">🌱</span>
                 <span className="text-2xl font-extrabold text-teal-800 font-mono">{liveCo2Est} kg</span>
-                <span className="text-[10px] text-slate-600 block font-bold">Estimated CO₂e</span>
+                <span className="text-[10px] text-slate-600 block font-bold">{t('estCo2')}</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 space-y-1">
                 <span className="text-2xl block">⏱</span>
                 <span className="text-2xl font-extrabold text-blue-800 font-mono">{liveHoursEst} h</span>
-                <span className="text-[10px] text-slate-600 block font-bold">Estimated time</span>
+                <span className="text-[10px] text-slate-600 block font-bold">{t('estTime')}</span>
               </div>
             </div>
           </div>

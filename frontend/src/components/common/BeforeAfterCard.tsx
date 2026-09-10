@@ -1,5 +1,6 @@
 import React from 'react';
 import { Fuel, DollarSign, Cloud, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface BeforeAfterProps {
   baselineFuel?: number;
@@ -18,6 +19,7 @@ export const BeforeAfterCard: React.FC<BeforeAfterProps> = ({
   fuelPricePerUnit = 100, // ₹100/L default
   co2Multiplier = 2.68
 }) => {
+  const { t } = useLanguage();
   const savedFuel = Math.max(0, baselineFuel - optimizedFuel);
   const baselineCost = Math.round(baselineFuel * fuelPricePerUnit);
   const optimizedCost = Math.round(optimizedFuel * fuelPricePerUnit);
@@ -28,14 +30,14 @@ export const BeforeAfterCard: React.FC<BeforeAfterProps> = ({
   const savedCo2 = Math.max(0, baselineCo2 - optimizedCo2);
 
   return (
-    <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6 text-slate-900">
+    <div className="p-6 sm:p-8 rounded-[28px] bg-white/60 backdrop-blur-[12px] border border-white/20 shadow-xl shadow-slate-900/5 space-y-6 text-slate-900">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-emerald-600" />
-          <h3 className="text-base font-extrabold text-slate-900">Before vs After GreenFleet Comparison</h3>
+          <h3 className="text-base font-extrabold text-slate-900">{t('beforeAfterTitle', 'Before vs After GreenFleet Comparison')}</h3>
         </div>
         <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
-          Proven Impact
+          {t('provenImpact', 'Proven Impact')}
         </span>
       </div>
 
@@ -43,21 +45,21 @@ export const BeforeAfterCard: React.FC<BeforeAfterProps> = ({
         {/* WITHOUT GREENFLEET */}
         <div className="p-5 rounded-2xl bg-red-50/50 border border-red-200 space-y-3">
           <div className="flex items-center justify-between text-xs font-extrabold text-red-700 uppercase tracking-wider">
-            <span>Without GreenFleet</span>
-            <span className="px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300 text-[10px]">Unoptimized</span>
+            <span>{t('withoutGreenFleet', 'Without GreenFleet')}</span>
+            <span className="px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300 text-[10px]">{t('unoptimized', 'Unoptimized')}</span>
           </div>
 
           <div className="space-y-2 font-mono text-sm">
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-500 font-sans"><Fuel className="w-4 h-4 text-amber-600" /> Fuel Used:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-700 font-sans"><Fuel className="w-4 h-4 text-amber-600" /> {t('lblFuelUsed', 'Fuel Used:')}</span>
               <span className="font-extrabold text-slate-900">{baselineFuel} {fuelUnit}</span>
             </div>
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-500 font-sans"><DollarSign className="w-4 h-4 text-emerald-600" /> Trip Cost:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-700 font-sans"><DollarSign className="w-4 h-4 text-emerald-600" /> {t('lblTripCost', 'Trip Cost:')}</span>
               <span className="font-extrabold text-slate-900">{currencySymbol}{baselineCost.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-500 font-sans"><Cloud className="w-4 h-4 text-slate-500" /> CO₂e Emitted:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-700 font-sans"><Cloud className="w-4 h-4 text-slate-700" /> {t('co2EmittedLabel', 'CO₂e Emitted:')}</span>
               <span className="font-extrabold text-slate-700">{baselineCo2} kg</span>
             </div>
           </div>
@@ -66,21 +68,21 @@ export const BeforeAfterCard: React.FC<BeforeAfterProps> = ({
         {/* WITH GREENFLEET */}
         <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-3 shadow-sm">
           <div className="flex items-center justify-between text-xs font-extrabold text-emerald-800 uppercase tracking-wider">
-            <span>With GreenFleet</span>
-            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px]">Optimized</span>
+            <span>{t('withGreenFleet', 'With GreenFleet')}</span>
+            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px]">{t('optimized', 'Optimized')}</span>
           </div>
 
           <div className="space-y-2 font-mono text-sm">
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><Fuel className="w-4 h-4 text-amber-600" /> Fuel Used:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><Fuel className="w-4 h-4 text-amber-600" /> {t('lblFuelUsed', 'Fuel Used:')}</span>
               <span className="font-extrabold text-emerald-700">{optimizedFuel} {fuelUnit}</span>
             </div>
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><DollarSign className="w-4 h-4 text-emerald-600" /> Trip Cost:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><DollarSign className="w-4 h-4 text-emerald-600" /> {t('lblTripCost', 'Trip Cost:')}</span>
               <span className="font-extrabold text-emerald-700">{currencySymbol}{optimizedCost.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between text-slate-700">
-              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><Cloud className="w-4 h-4 text-teal-600" /> CO₂e Emitted:</span>
+              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-sans"><Cloud className="w-4 h-4 text-teal-600" /> {t('co2EmittedLabel', 'CO₂e Emitted:')}</span>
               <span className="font-extrabold text-teal-700">{optimizedCo2} kg</span>
             </div>
           </div>
@@ -89,22 +91,22 @@ export const BeforeAfterCard: React.FC<BeforeAfterProps> = ({
         {/* YOUR SAVINGS RESULT */}
         <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-700 text-white space-y-3 shadow-md">
           <div className="flex items-center justify-between text-xs font-extrabold text-emerald-100 uppercase tracking-wider">
-            <span>Your Net Savings</span>
+            <span>{t('netSavings', 'Your Net Savings')}</span>
             <CheckCircle2 className="w-4 h-4 text-white" />
           </div>
 
           <div className="space-y-2 text-xs font-extrabold">
             <div className="p-2 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-between">
-              <span className="text-emerald-100">Fuel Saved:</span>
-              <span className="text-white font-mono text-sm">{savedFuel} {fuelUnit} Saved</span>
+              <span className="text-emerald-100">{t('lblFuelSavedLabel', 'Fuel Saved:')}</span>
+              <span className="text-white font-mono text-sm">{Number(savedFuel).toFixed(1)} {fuelUnit} {t('savedLabel', 'Saved')}</span>
             </div>
             <div className="p-2 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-between">
-              <span className="text-emerald-100">Money Saved:</span>
-              <span className="text-white font-mono text-sm">{currencySymbol}{savedCost.toLocaleString()} Saved</span>
+              <span className="text-emerald-100">{t('lblMoneySavedLabel', 'Money Saved:')}</span>
+              <span className="text-white font-mono text-sm">{currencySymbol}{savedCost.toLocaleString()} {t('savedLabel', 'Saved')}</span>
             </div>
             <div className="p-2 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-between">
-              <span className="text-emerald-100">Emissions Avoided:</span>
-              <span className="text-white font-mono text-sm">{savedCo2} kg CO₂e Avoided</span>
+              <span className="text-emerald-100">{t('emissionsAvoided', 'Emissions Avoided:')}</span>
+              <span className="text-white font-mono text-sm">{savedCo2} kg CO₂e {t('avoidedLabel', 'Avoided')}</span>
             </div>
           </div>
         </div>

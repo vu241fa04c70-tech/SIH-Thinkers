@@ -28,7 +28,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
         }}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="text-slate-400 hover:text-emerald-600 focus:outline-none transition-colors p-0.5 rounded-full"
+        className="text-slate-700 hover:text-emerald-600 focus:outline-none transition-colors p-0.5 rounded-full"
         aria-label="Information"
       >
         <IconComponent className="w-3.5 h-3.5" />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { HelpCircle, MapPin, PlusCircle, LayoutDashboard, Calculator, Info, X } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface HelpModalProps {
   isOpen: boolean;
@@ -8,40 +9,42 @@ interface HelpModalProps {
 }
 
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onNavigate }) => {
+  const { t } = useLanguage();
+
   if (!isOpen) return null;
 
   const options = [
     {
-      label: 'Find the Best Route',
-      sublabel: 'Compare routes to balance fuel, cost, and time',
+      label: t('findBestRouteLabel', 'Find the Best Route'),
+      sublabel: t('findBestRouteSub', 'Compare routes to balance fuel, cost, and time'),
       tab: 'optimization',
       icon: MapPin,
       color: 'text-emerald-700 bg-emerald-50 border-emerald-200'
     },
     {
-      label: 'Plan a Trip Fuel Estimate',
-      sublabel: 'Calculate fuel & emissions before starting',
+      label: t('planFuelEstimateLabel', 'Plan a Trip Fuel Estimate'),
+      sublabel: t('planFuelEstimateSub', 'Calculate fuel & emissions before starting'),
       tab: 'predictions',
       icon: Calculator,
       color: 'text-teal-700 bg-teal-50 border-teal-200'
     },
     {
-      label: 'Check Today\'s Fleet Savings',
-      sublabel: 'See live summary of active vehicles & money saved',
+      label: t('checkTodaySavingsLabel', "Check Today's Fleet Savings"),
+      sublabel: t('checkTodaySavingsSub', 'See live summary of active vehicles & money saved'),
       tab: 'overview',
       icon: LayoutDashboard,
       color: 'text-amber-700 bg-amber-50 border-amber-200'
     },
     {
-      label: 'Add or View Vehicles',
-      sublabel: 'Manage trucks, vans, and cargo ships in your fleet',
+      label: t('addViewVehiclesLabel', 'Add or View Vehicles'),
+      sublabel: t('addViewVehiclesSub', 'Manage trucks, vans, and cargo ships in your fleet'),
       tab: 'fleet',
       icon: PlusCircle,
       color: 'text-blue-700 bg-blue-50 border-blue-200'
     },
     {
-      label: 'Understand My Results & Tech',
-      sublabel: 'Learn about GreenFleet optimization models',
+      label: t('understandTechLabel', 'Understand My Results & Tech'),
+      sublabel: t('understandTechSub', 'Learn about GreenFleet optimization models'),
       tab: 'about',
       icon: Info,
       color: 'text-purple-700 bg-purple-50 border-purple-200'
@@ -53,7 +56,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onNavigat
       <div className="relative w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5 text-slate-900">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full text-slate-700 hover:text-slate-700 hover:bg-slate-100 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -63,8 +66,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onNavigat
             <HelpCircle className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900">Need Help? ❓</h2>
-            <p className="text-xs text-slate-500 font-medium">What would you like to do?</p>
+            <h2 className="text-xl font-extrabold text-slate-900">{t('needHelp', 'Need Help? ❓')}</h2>
+            <p className="text-xs text-slate-700 font-medium">{t('whatWouldLikeDo', 'What would you like to do?')}</p>
           </div>
         </div>
 
@@ -88,10 +91,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, onNavigat
                     <span className="font-extrabold text-sm text-slate-800 group-hover:text-emerald-800 block">
                       {opt.label}
                     </span>
-                    <span className="text-xs text-slate-500">{opt.sublabel}</span>
+                    <span className="text-xs text-slate-700">{opt.sublabel}</span>
                   </div>
                 </div>
-                <span className="text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-1 transition-all text-xs font-bold">
+                <span className="text-slate-700 group-hover:text-emerald-700 group-hover:translate-x-1 transition-all text-xs font-bold">
                   →
                 </span>
               </button>

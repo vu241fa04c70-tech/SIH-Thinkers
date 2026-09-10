@@ -9,7 +9,8 @@ import { VideoDemoModal } from './VideoDemoModal';
 import { BeforeAfterCard } from '../common/BeforeAfterCard';
 import { WhyRecommendedCard } from '../common/WhyRecommendedCard';
 import { InfoTooltip } from '../common/InfoTooltip';
-import { ArrowRight, CheckCircle2, Cpu, ChevronDown, ChevronUp, DollarSign, ShieldCheck, Truck, MapPin, Compass, BarChart3, Fuel, Cloud, Leaf, Settings } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Cpu, ChevronDown, ChevronUp, DollarSign, ShieldCheck, Truck, MapPin, Compass, BarChart3, Fuel, Cloud, Leaf, Settings, Sparkles } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Props {
   onNavigateToApp: (tab?: string) => void;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simple' }) => {
+  const { t } = useLanguage();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [isCalcExplainedOpen, setIsCalcExplainedOpen] = useState(false);
@@ -25,19 +27,22 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
     <div className="space-y-10 text-slate-900">
       {/* 1. TOP WELCOME & 3 LARGE FEATURE CARDS */}
       <div className="space-y-6">
-        <div className="text-center space-y-2 max-w-2xl mx-auto py-2">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Welcome to GreenFleet 👋
+        {/* 1. TOP WELCOME CARD */}
+        <div className="p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-xl text-center space-y-3 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/90 border border-emerald-300 text-xs font-extrabold text-emerald-800 shadow-sm">
+            <Sparkles className="w-4 h-4 text-emerald-600" /> {t('assistantBadge')}
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            {t('welcomeTitle')}
           </h1>
-          <p className="text-base sm:text-lg text-slate-600 font-semibold">
-            Let's help you plan a smarter trip.
+          <p className="text-base sm:text-lg text-slate-700 font-bold">
+            {t('welcomeSub')}
           </p>
-        </div>
-
-        <div className="text-center">
-          <span className="text-xs font-extrabold text-emerald-700 uppercase tracking-widest block">
-            WHAT DO YOU WANT TO DO?
-          </span>
+          <div className="pt-3 border-t border-slate-100">
+            <span className="text-xs font-extrabold text-emerald-700 uppercase tracking-widest block">
+              {t('whatToDo')}
+            </span>
+          </div>
         </div>
 
         {/* 3 LARGE FEATURE CARDS */}
@@ -48,16 +53,16 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
               <div className="w-14 h-14 rounded-2xl bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center text-3xl shadow-sm">
                 🚚
               </div>
-              <h2 className="text-xl font-extrabold text-slate-900">PLAN A TRIP</h2>
+              <h2 className="text-xl font-extrabold text-slate-900">{t('planTrip').toUpperCase()}</h2>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Estimate fuel, cost and emissions before you travel.
+                {t('descPlanTrip')}
               </p>
             </div>
             <button
               onClick={() => onNavigateToApp('predictions')}
               className="w-full py-3.5 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
             >
-              <span>Plan My Trip →</span>
+              <span>{t('btnPlanTrip')}</span>
             </button>
           </div>
 
@@ -67,16 +72,16 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
               <div className="w-14 h-14 rounded-2xl bg-teal-100 border border-teal-300 text-teal-700 flex items-center justify-center text-3xl shadow-sm">
                 📍
               </div>
-              <h2 className="text-xl font-extrabold text-slate-900">FIND THE BEST ROUTE</h2>
+              <h2 className="text-xl font-extrabold text-slate-900">{t('bestRoute').toUpperCase()}</h2>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Compare routes and choose a smarter option.
+                {t('descBestRoute')}
               </p>
             </div>
             <button
               onClick={() => onNavigateToApp('optimization')}
               className="w-full py-3.5 px-5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm transition-all shadow-md shadow-teal-600/20 flex items-center justify-center gap-2"
             >
-              <span>Find Best Route →</span>
+              <span>{t('btnBestRoute')}</span>
             </button>
           </div>
 
@@ -86,16 +91,16 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
               <div className="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center text-3xl shadow-sm">
                 💰
               </div>
-              <h2 className="text-xl font-extrabold text-slate-900">CHECK MY SAVINGS</h2>
+              <h2 className="text-xl font-extrabold text-slate-900">{t('mySavings').toUpperCase()}</h2>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                See how much fuel, money and CO₂ you've saved.
+                {t('descMySavings')}
               </p>
             </div>
             <button
               onClick={() => onNavigateToApp('analytics')}
               className="w-full py-3.5 px-5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-sm transition-all shadow-md shadow-amber-600/20 flex items-center justify-center gap-2"
             >
-              <span>View Savings →</span>
+              <span>{t('btnViewSavings')}</span>
             </button>
           </div>
         </div>
@@ -104,8 +109,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
       {/* 2. SECONDARY FEATURE CARDS: MORE TOOLS */}
       <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-lg">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="text-base font-extrabold text-slate-900 uppercase tracking-wider">MORE TOOLS</h3>
-          <span className="text-xs text-slate-500 font-medium">Everything you need for fleet optimization</span>
+          <h3 className="text-base font-extrabold text-slate-900 uppercase tracking-wider">{t('moreTools')}</h3>
+          <span className="text-xs text-slate-700 font-medium">{t('moreToolsSub')}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
@@ -114,8 +119,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
             className="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 text-left space-y-1.5 transition-all group shadow-sm"
           >
             <span className="text-xl block">🚚</span>
-            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">My Vehicles</span>
-            <span className="text-slate-500 text-[11px] font-medium">Manage your trucks and ships.</span>
+            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">{t('toolMyVehicles')}</span>
+            <span className="text-slate-700 text-[11px] font-medium">{t('descToolMyVehicles')}</span>
           </button>
 
           <button
@@ -123,8 +128,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
             className="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 text-left space-y-1.5 transition-all group shadow-sm"
           >
             <span className="text-xl block">⛽</span>
-            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">Fuel Calculator</span>
-            <span className="text-slate-500 text-[11px] font-medium">Compare fuel options.</span>
+            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">{t('toolFuelCalc')}</span>
+            <span className="text-slate-700 text-[11px] font-medium">{t('descToolFuelCalc')}</span>
           </button>
 
           <button
@@ -132,8 +137,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
             className="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 text-left space-y-1.5 transition-all group shadow-sm"
           >
             <span className="text-xl block">📊</span>
-            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">Fleet Reports</span>
-            <span className="text-slate-500 text-[11px] font-medium">See your fleet performance.</span>
+            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">{t('toolFleetReports')}</span>
+            <span className="text-slate-700 text-[11px] font-medium">{t('descToolFleetReports')}</span>
           </button>
 
           <button
@@ -141,8 +146,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
             className="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 text-left space-y-1.5 transition-all group shadow-sm"
           >
             <span className="text-xl block">🌱</span>
-            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">Environmental Impact</span>
-            <span className="text-slate-500 text-[11px] font-medium">Track emissions avoided.</span>
+            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">{t('toolEcoImpact')}</span>
+            <span className="text-slate-700 text-[11px] font-medium">{t('descToolEcoImpact')}</span>
           </button>
 
           <button
@@ -150,8 +155,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
             className="p-4 rounded-2xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 text-left space-y-1.5 transition-all group shadow-sm"
           >
             <span className="text-xl block">⚙️</span>
-            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">Advanced Optimization</span>
-            <span className="text-slate-500 text-[11px] font-medium">Explore technical optimization.</span>
+            <span className="font-extrabold text-slate-900 block group-hover:text-emerald-700">{t('toolAdvOptimization')}</span>
+            <span className="text-slate-700 text-[11px] font-medium">{t('descToolAdvOptimization')}</span>
           </button>
         </div>
       </div>
@@ -159,12 +164,12 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
       {/* 3. YOUR FLEET TODAY SNAPSHOT */}
       <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-lg">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="text-base font-extrabold text-slate-900 uppercase tracking-wider">YOUR FLEET TODAY</h3>
+          <h3 className="text-base font-extrabold text-slate-900 uppercase tracking-wider">{t('fleetToday')}</h3>
           <button
             onClick={() => onNavigateToApp('overview')}
             className="text-xs text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1"
           >
-            <span>See full report →</span>
+            <span>{t('seeFullReport')}</span>
           </button>
         </div>
 
@@ -172,25 +177,25 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
           <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-1 shadow-sm">
             <span className="text-2xl block">🚚</span>
             <span className="text-2xl font-extrabold text-slate-900 font-mono">44 / 52</span>
-            <span className="text-xs text-slate-600 block font-bold">Vehicles Active</span>
+            <span className="text-xs text-slate-600 block font-bold">{t('lblVehiclesActive')}</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-1 shadow-sm">
             <span className="text-2xl block">⛽</span>
             <span className="text-2xl font-extrabold text-amber-700 font-mono">612 L</span>
-            <span className="text-xs text-slate-600 block font-bold">Fuel Saved</span>
+            <span className="text-xs text-slate-600 block font-bold">{t('lblFuelSaved')}</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-1 shadow-sm">
             <span className="text-2xl block">💰</span>
             <span className="text-2xl font-extrabold text-emerald-700 font-mono">₹734.88</span>
-            <span className="text-xs text-slate-600 block font-bold">Money Saved</span>
+            <span className="text-xs text-slate-600 block font-bold">{t('lblMoneySaved')}</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-teal-50/60 border border-teal-200 space-y-1 shadow-sm">
             <span className="text-2xl block">🌱</span>
             <span className="text-2xl font-extrabold text-teal-700 font-mono">1,641 kg</span>
-            <span className="text-xs text-slate-600 block font-bold">CO₂ Avoided</span>
+            <span className="text-xs text-slate-600 block font-bold">{t('lblCo2Avoided')}</span>
           </div>
         </div>
       </div>
@@ -199,38 +204,38 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
       <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-lg text-center">
         <div className="space-y-1 max-w-xl mx-auto">
           <span className="text-xs font-extrabold text-emerald-700 uppercase tracking-widest block">
-            SIMPLE WORKFLOW
+            {t('simpleWorkflow')}
           </span>
-          <h2 className="text-2xl font-extrabold text-slate-900">HOW IT WORKS</h2>
+          <h2 className="text-2xl font-extrabold text-slate-900">{t('howItWorksTitle')}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs text-center">
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm">
             <span className="text-xs font-mono font-extrabold text-emerald-700 block">01</span>
             <span className="text-2xl block">🚚</span>
-            <h4 className="font-extrabold text-slate-900 text-sm">Choose your vehicle</h4>
-            <p className="text-slate-600 text-[11px] font-medium">Tell us what you're driving.</p>
+            <h4 className="font-extrabold text-slate-900 text-sm">{t('step1Title')}</h4>
+            <p className="text-slate-600 text-[11px] font-medium">{t('step1Desc')}</p>
           </div>
 
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm">
             <span className="text-xs font-mono font-extrabold text-teal-700 block">02</span>
             <span className="text-2xl block">📍</span>
-            <h4 className="font-extrabold text-slate-900 text-sm">Enter your trip</h4>
-            <p className="text-slate-600 text-[11px] font-medium">Add distance, cargo and conditions.</p>
+            <h4 className="font-extrabold text-slate-900 text-sm">{t('step2Title')}</h4>
+            <p className="text-slate-600 text-[11px] font-medium">{t('step2Desc')}</p>
           </div>
 
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm">
             <span className="text-xs font-mono font-extrabold text-amber-700 block">03</span>
             <span className="text-2xl block">🤖</span>
-            <h4 className="font-extrabold text-slate-900 text-sm">GreenFleet analyzes</h4>
-            <p className="text-slate-600 text-[11px] font-medium">We estimate fuel, cost and emissions.</p>
+            <h4 className="font-extrabold text-slate-900 text-sm">{t('step3Title')}</h4>
+            <p className="text-slate-600 text-[11px] font-medium">{t('step3Desc')}</p>
           </div>
 
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm">
             <span className="text-xs font-mono font-extrabold text-purple-700 block">04</span>
             <span className="text-2xl block">⭐</span>
-            <h4 className="font-extrabold text-slate-900 text-sm">Get your best option</h4>
-            <p className="text-slate-600 text-[11px] font-medium">Choose the route that works best for you.</p>
+            <h4 className="font-extrabold text-slate-900 text-sm">{t('step4Title')}</h4>
+            <p className="text-slate-600 text-[11px] font-medium">{t('step4Desc')}</p>
           </div>
         </div>
       </div>
@@ -238,9 +243,9 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
       {/* 5. FRIENDLY CTA BANNER */}
       <div className="p-8 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-center space-y-4 shadow-xl">
         <div className="space-y-2 max-w-xl mx-auto">
-          <h2 className="text-2xl font-extrabold text-white">READY TO PLAN YOUR NEXT TRIP?</h2>
+          <h2 className="text-2xl font-extrabold text-white">{t('readyToPlanTitle')}</h2>
           <p className="text-xs text-emerald-100 font-medium">
-            Let GreenFleet do the complicated calculations for you.
+            {t('readyToPlanSub')}
           </p>
         </div>
 
@@ -248,7 +253,7 @@ export const LandingPage: React.FC<Props> = ({ onNavigateToApp, viewMode = 'simp
           onClick={() => onNavigateToApp('predictions')}
           className="px-8 py-4 rounded-2xl bg-white hover:bg-slate-50 text-emerald-800 font-extrabold text-sm transition-all shadow-lg inline-flex items-center gap-2 group transform hover:scale-[1.02]"
         >
-          <span>Start a Trip →</span>
+          <span>{t('startTripBtn')}</span>
         </button>
       </div>
 

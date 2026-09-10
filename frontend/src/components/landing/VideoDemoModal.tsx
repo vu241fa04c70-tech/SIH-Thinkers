@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Play, Sparkles, Cpu, Fuel, Cloud, CheckCircle } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface Props {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export const VideoDemoModal: React.FC<Props> = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
   const [activeStep, setActiveStep] = useState(0);
 
   if (!isOpen) return null;
@@ -43,7 +45,7 @@ export const VideoDemoModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-2xl space-y-6 relative shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-xl text-slate-700 hover:text-white hover:bg-slate-800 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -53,8 +55,8 @@ export const VideoDemoModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <Play className="w-6 h-6 fill-emerald-400" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">GreenFleet AI Interactive Walkthrough</h3>
-            <p className="text-xs text-slate-400">Step-by-Step AI Engine & QUBO Optimization Simulation</p>
+            <h3 className="text-xl font-bold text-white">{t('interactiveWalkthrough', 'GreenFleet AI Interactive Walkthrough')}</h3>
+            <p className="text-xs text-slate-700">{t('stepByStepSim', 'Step-by-Step AI Engine & QUBO Optimization Simulation')}</p>
           </div>
         </div>
 
@@ -86,22 +88,22 @@ export const VideoDemoModal: React.FC<Props> = ({ isOpen, onClose }) => {
               className={`p-2.5 rounded-xl border text-left transition-all ${
                 activeStep === idx
                   ? 'bg-emerald-950/60 border-emerald-500 text-emerald-300 font-bold'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                  : 'bg-slate-950 border-slate-800 text-slate-700 hover:text-slate-200'
               }`}
             >
-              <div className="text-[10px] text-slate-500">Step {idx + 1}</div>
+              <div className="text-[10px] text-slate-700">Step {idx + 1}</div>
               <div className="truncate text-[11px] mt-0.5">{s.title.split('.')[1]}</div>
             </button>
           ))}
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
-          <span className="text-slate-400">Click steps above to navigate simulation</span>
+          <span className="text-slate-700">{t('clickStepsNav', 'Click steps above to navigate simulation')}</span>
           <button
             onClick={() => setActiveStep((prev) => (prev + 1) % steps.length)}
             className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors"
           >
-            Next Step
+            {t('nextStepBtn', 'Next Step')}
           </button>
         </div>
       </div>

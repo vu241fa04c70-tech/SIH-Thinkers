@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { weatherService, WeatherData } from '../../services/weatherService';
 import { CloudRain, Wind, Thermometer, Droplets, Navigation, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface WeatherWidgetProps {
   onWeatherSelect?: (data: WeatherData) => void;
 }
 
 export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ onWeatherSelect }) => {
+  const { t } = useLanguage();
   const cities = weatherService.getAvailableCities();
   const [selectedCity, setSelectedCity] = useState(cities[0]);
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -37,8 +39,8 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ onWeatherSelect })
             <CloudRain className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-extrabold text-sm text-slate-900">Live Weather & Route Conditions API</h3>
-            <p className="text-[11px] text-slate-500 font-medium">Real-time Open-Meteo & sea state analysis</p>
+            <h3 className="font-extrabold text-sm text-slate-900">{t('liveWeatherTitle', 'Live Weather & Route Conditions API')}</h3>
+            <p className="text-[11px] text-slate-700 font-medium">{t('liveWeatherSub', 'Real-time Open-Meteo & sea state analysis')}</p>
           </div>
         </div>
 
@@ -66,25 +68,25 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ onWeatherSelect })
         <div className="space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] block font-medium">Temperature</span>
+              <span className="text-slate-700 text-[10px] block font-medium">{t('tempLabel', 'Temperature')}</span>
               <span className="text-lg font-extrabold text-slate-900 font-mono">{weather.temperature_c}°C</span>
               <span className="text-[10px] text-teal-700 font-bold block">{weather.condition}</span>
             </div>
 
             <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] block font-medium">Wind Speed</span>
+              <span className="text-slate-700 text-[10px] block font-medium">{t('windSpeed', 'Wind Speed')}</span>
               <span className="text-lg font-extrabold text-slate-900 font-mono">{weather.wind_speed_kmh} km/h</span>
-              <span className="text-[10px] text-slate-500 block font-medium">Dir: {weather.wind_direction}</span>
+              <span className="text-[10px] text-slate-700 block font-medium">Dir: {weather.wind_direction}</span>
             </div>
 
             <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-slate-500 text-[10px] block font-medium">Road / Surface</span>
+              <span className="text-slate-700 text-[10px] block font-medium">{t('roadCondition', 'Road / Surface')}</span>
               <span className="text-xs font-extrabold text-slate-900 block">{weather.road_condition}</span>
-              <span className="text-[10px] text-slate-500 block font-medium">Rain: {weather.precipitation_mm} mm</span>
+              <span className="text-[10px] text-slate-700 block font-medium">Rain: {weather.precipitation_mm} mm</span>
             </div>
 
             <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-1">
-              <span className="text-amber-800 text-[10px] block font-bold">Weather Fuel Penalty</span>
+              <span className="text-amber-800 text-[10px] block font-bold">{t('weatherPenalty', 'Weather Fuel Penalty')}</span>
               <span className="text-lg font-extrabold text-amber-700 font-mono">+{weather.fuel_impact_percent}% Fuel</span>
               <span className="text-[10px] text-amber-800 font-bold block">Environmental Drag</span>
             </div>

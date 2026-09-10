@@ -1,8 +1,10 @@
 import React from 'react';
 import { ShapContribution } from '../../types/prediction';
 import { HelpCircle, Sparkles } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const ModelExplanation: React.FC<{ shapExplanations: ShapContribution[] }> = ({ shapExplanations }) => {
+  const { t } = useLanguage();
   const maxVal = Math.max(...shapExplanations.map(s => Math.abs(s.impact_value)), 1.0);
 
   return (
@@ -10,13 +12,13 @@ export const ModelExplanation: React.FC<{ shapExplanations: ShapContribution[] }
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <HelpCircle className="w-5 h-5 text-emerald-400" />
-          <h3 className="text-base font-bold text-white">Why Your Trip Uses This Much Fuel</h3>
+          <h3 className="text-base font-bold text-white">{t('whyTripFuel', 'Why Your Trip Uses This Much Fuel')}</h3>
         </div>
-        <span className="text-xs text-slate-400 font-bold">Easy Fuel Factors</span>
+        <span className="text-xs text-slate-700 font-bold">{t('easyFuelFactors', 'Easy Fuel Factors')}</span>
       </div>
 
-      <p className="text-xs text-slate-400 leading-relaxed">
-        Here is a simple breakdown of what increased or decreased your fuel consumption for this trip:
+      <p className="text-xs text-slate-700 leading-relaxed">
+        {t('shapBreakdownSub', 'Here is a simple breakdown of what increased or decreased your fuel consumption for this trip:')}
       </p>
 
       <div className="space-y-3 pt-2">
@@ -42,7 +44,7 @@ export const ModelExplanation: React.FC<{ shapExplanations: ShapContribution[] }
                 />
               </div>
 
-              <p className="text-[11px] text-slate-400">{item.description}</p>
+              <p className="text-[11px] text-slate-700">{item.description}</p>
             </div>
           );
         })}

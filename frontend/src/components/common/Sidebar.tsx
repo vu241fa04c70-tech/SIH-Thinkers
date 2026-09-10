@@ -1,5 +1,6 @@
 import React from 'react';
-import { Home, Truck, MapPin, Compass, DollarSign, BarChart3, HelpCircle, Info } from 'lucide-react';
+import { Home, Truck, MapPin, Compass, DollarSign, BarChart3, HelpCircle, Info, Leaf, Building2, ShieldCheck, Trophy } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SidebarProps {
   activeTab: string;
@@ -7,21 +8,26 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+  const { t } = useLanguage();
+
   const menuItems = [
-    { id: 'landing', label: '🏠 Home', subtext: 'Control center & tools', icon: Home },
-    { id: 'fleet', label: '🚚 My Vehicles', subtext: 'Manage trucks & ships', icon: Truck },
-    { id: 'predictions', label: '📍 Plan a Trip', subtext: 'Estimate fuel & emissions', icon: MapPin },
-    { id: 'optimization', label: '🧭 Best Route', subtext: 'Find cheapest green route', icon: Compass },
-    { id: 'analytics', label: '💰 My Savings', subtext: 'Today\'s money & fuel saved', icon: DollarSign },
-    { id: 'reports', label: '📊 Reports', subtext: 'Fleet efficiency insights', icon: BarChart3 },
-    { id: 'about', label: 'ℹ️ About', subtext: 'How GreenFleet works', icon: Info },
+    { id: 'landing', label: t('home'), subtext: t('subHome', 'Control center & tools'), icon: Home },
+    { id: 'predictions', label: t('planTrip'), subtext: t('subPlanTrip', 'Estimate fuel & emissions'), icon: MapPin },
+    { id: 'optimization', label: t('bestRoute'), subtext: t('subBestRoute', 'Find cheapest green route'), icon: Compass },
+    { id: 'passport', label: t('carbonPassport', 'Carbon Passport'), subtext: t('subCarbonPassport', 'Verified Sustainability Report'), icon: Leaf },
+    { id: 'incentives', label: t('govIncentives', 'Government Incentives'), subtext: t('subGovIncentives', 'Green Subsidy & Credits'), icon: Building2 },
+    { id: 'challenge', label: t('ecoChallenge', 'Eco Challenge'), subtext: t('subEcoChallenge', 'Driver Ranks, Badges & Points'), icon: Trophy },
+    { id: 'risk', label: t('routeRiskMeter', 'Route Risk Meter'), subtext: t('subRouteRiskMeter', 'Safer Roads & AI Pre-trip Check'), icon: ShieldCheck },
+    { id: 'analytics', label: t('mySavings'), subtext: t('subSavings', "Today's money & fuel saved"), icon: DollarSign },
+    { id: 'reports', label: t('reports'), subtext: t('subReports', 'Fleet efficiency insights'), icon: BarChart3 },
+    { id: 'about', label: t('about'), subtext: t('subAbout', 'How GreenFleet works'), icon: Info },
   ];
 
   return (
-    <aside className="w-64 bg-white/90 backdrop-blur-md border-r border-slate-200/80 p-4 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4rem)] shadow-sm sticky top-16">
+    <aside className="w-64 bg-white/60 backdrop-blur-[12px] border-r border-white/20 shadow-lg shadow-slate-900/5 p-4 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4rem)] shadow-sm sticky top-16">
       <div className="space-y-2">
         <div className="px-3 py-2 text-xs font-extrabold text-emerald-700 uppercase tracking-wider">
-          GreenFleet Menu
+          {t('menuTitle', 'GreenFleet Menu')}
         </div>
         {menuItems.map((item) => {
           const isActive = activeTab === item.id || (item.id === 'reports' && activeTab === 'analytics');
@@ -37,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
             >
               <div>
                 <span className="font-extrabold text-sm block">{item.label}</span>
-                <span className={`text-[11px] block font-normal ${isActive ? 'text-emerald-100' : 'text-slate-500'}`}>
+                <span className={`text-[11px] block font-normal ${isActive ? 'text-emerald-100' : 'text-slate-700'}`}>
                   {item.subtext}
                 </span>
               </div>
@@ -47,9 +53,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       </div>
 
       <div className="p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200 space-y-2 text-xs">
-        <div className="font-extrabold text-emerald-800">🌱 Smart Assistant</div>
+        <div className="font-extrabold text-emerald-800">🌱 {t('smartAssistantTitle', 'Smart Assistant')}</div>
         <p className="text-emerald-900 leading-relaxed font-medium">
-          Open app → choose your trip → GreenFleet finds your savings!
+          {t('smartAssistantDesc', 'Open app → choose your trip → GreenFleet finds your savings!')}
         </p>
       </div>
     </aside>

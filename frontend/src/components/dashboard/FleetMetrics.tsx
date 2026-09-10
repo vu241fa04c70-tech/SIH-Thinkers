@@ -1,6 +1,7 @@
 import React from 'react';
 import { Truck, Cloud, Fuel, DollarSign, TrendingDown } from 'lucide-react';
 import { InfoTooltip } from '../common/InfoTooltip';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SummaryData {
   total_vehicles: number;
@@ -14,38 +15,40 @@ interface SummaryData {
 }
 
 export const FleetMetrics: React.FC<{ summary?: SummaryData }> = ({ summary }) => {
+  const { t } = useLanguage();
+
   const cards = [
     {
-      title: "🚚 VEHICLES ACTIVE",
+      title: `🚚 ${t('vehiclesActiveTitle', 'VEHICLES ACTIVE')}`,
       value: `${summary?.active_vehicles || 44} of ${summary?.total_vehicles || 52}`,
-      subtext: "84.6% of your fleet is currently operating",
+      subtext: t('vehiclesActiveSub', '84.6% of your fleet is currently operating'),
       tooltip: "The percentage of registered fleet vehicles and ships currently active on trips today.",
       icon: Truck,
       color: "text-blue-700",
       bg: "bg-blue-50/70 border-blue-200",
     },
     {
-      title: "🌱 POLLUTION AVOIDED TODAY",
+      title: `🌱 ${t('pollutionAvoidedTodayTitle', 'POLLUTION AVOIDED TODAY')}`,
       value: `${(summary?.ghg_saved_today_kg || 1641.2).toLocaleString()} kg CO₂e`,
-      subtext: "Compared with normal routes",
+      subtext: t('pollutionSub', 'Compared with normal routes'),
       tooltip: "Total greenhouse gas emissions prevented today by taking GreenFleet optimized routes.",
       icon: Cloud,
       color: "text-emerald-700",
       bg: "bg-emerald-50/70 border-emerald-200",
     },
     {
-      title: "⛽ FUEL SAVED TODAY",
+      title: `⛽ ${t('fuelSavedTodayTitle', 'FUEL SAVED TODAY')}`,
       value: `${summary?.fuel_saved_today_liters || 612} L`,
-      subtext: "21.5% below normal routes",
+      subtext: t('fuelSub', '21.5% below normal routes'),
       tooltip: "Total fuel volume saved today across all active land and maritime trips.",
       icon: Fuel,
       color: "text-amber-700",
       bg: "bg-amber-50/70 border-amber-200",
     },
     {
-      title: "💰 MONEY SAVED TODAY",
+      title: `💰 ${t('moneySavedTodayTitle', 'MONEY SAVED TODAY')}`,
       value: `₹${Math.round((summary?.cost_savings_today_usd || 734.88) * 83).toLocaleString()}`,
-      subtext: "Direct fuel bill savings",
+      subtext: t('moneySub', 'Direct fuel bill savings'),
       tooltip: "Total money saved on fuel costs today compared to taking conventional unoptimized routes.",
       icon: DollarSign,
       color: "text-teal-700",

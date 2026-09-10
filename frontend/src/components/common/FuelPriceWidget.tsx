@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { fuelPriceService, FuelPriceItem } from '../../services/fuelPriceService';
 import { Fuel, DollarSign, MapPin, RefreshCw, Zap, Flame, Ship } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface FuelPriceWidgetProps {
   onPriceSelect?: (item: FuelPriceItem) => void;
 }
 
 export const FuelPriceWidget: React.FC<FuelPriceWidgetProps> = ({ onPriceSelect }) => {
+  const { t } = useLanguage();
   const regions = fuelPriceService.getAvailableRegions();
   const [selectedRegion, setSelectedRegion] = useState(regions[0]);
   const [prices, setPrices] = useState<FuelPriceItem[]>(fuelPriceService.getAllPricesAsList(regions[0]));
@@ -24,8 +26,8 @@ export const FuelPriceWidget: React.FC<FuelPriceWidgetProps> = ({ onPriceSelect 
             <Fuel className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-extrabold text-sm text-slate-900">⛽ Fuel Price Index API</h3>
-            <p className="text-[11px] text-slate-500 font-medium">Daily state & port fuel tariffs in ₹ INR</p>
+            <h3 className="font-extrabold text-sm text-slate-900">{t('fuelPriceIndexApi', '⛽ Fuel Price Index API')}</h3>
+            <p className="text-[11px] text-slate-700 font-medium">{t('dailyTariffsSub', 'Daily state & port fuel tariffs in ₹ INR')}</p>
           </div>
         </div>
 
@@ -53,14 +55,14 @@ export const FuelPriceWidget: React.FC<FuelPriceWidgetProps> = ({ onPriceSelect 
               <span className="text-lg">
                 {item.fuel_type === 'diesel' ? '⛽' : item.fuel_type === 'lng' ? '🔥' : item.fuel_type === 'electric' ? '⚡' : item.fuel_type === 'petrol' ? '🚗' : '🚢'}
               </span>
-              <span className="text-[10px] text-slate-400 font-mono">{item.last_updated}</span>
+              <span className="text-[10px] text-slate-700 font-mono">{item.last_updated}</span>
             </div>
             <h4 className="font-extrabold text-slate-900 text-xs truncate">{item.name}</h4>
             <div className="flex items-baseline gap-1">
               <span className="text-base font-extrabold text-amber-700 font-mono">₹{item.price_inr}</span>
-              <span className="text-[10px] text-slate-500 font-medium">{item.unit}</span>
+              <span className="text-[10px] text-slate-700 font-medium">{item.unit}</span>
             </div>
-            <span className="text-[10px] text-slate-400 block truncate font-medium">{item.source}</span>
+            <span className="text-[10px] text-slate-700 block truncate font-medium">{item.source}</span>
           </div>
         ))}
       </div>
