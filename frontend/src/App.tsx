@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from './components/common/Layout';
 import { LandingPage } from './components/landing/LandingPage';
 import { DashboardOverview } from './components/dashboard/DashboardOverview';
+import { RouteOptimizationPage } from './components/route-optimization/RouteOptimizationPage';
+import { CarbonPassportPage } from './components/carbon-passport/CarbonPassportPage';
+import { GovernmentIncentivesPage } from './components/government-incentives/GovernmentIncentivesPage';
+import { RouteRiskMeterPage } from './components/route-risk-meter/RouteRiskMeterPage';
+import { EcoChallengePage } from './components/eco-challenge/EcoChallengePage';
 import { VehicleList } from './components/fleet/VehicleList';
 import { PredictionForm } from './components/prediction/PredictionForm';
 import { RouteVisualization } from './components/optimization/RouteVisualization';
 import { PerformanceAnalytics } from './components/analytics/PerformanceAnalytics';
-import { AboutPage } from './components/about/AboutPage';
-import { OnboardingModal } from './components/common/OnboardingModal';
-import { Vehicle } from './types/vehicle';
+import { SettingsPage } from './components/settings/SettingsPage';
 
 export const App: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -24,60 +27,36 @@ export const App: React.FC = () => {
 
   return (
     <Layout>
-      {(activeTab, setActiveTab, viewMode) => {
-        return (
-          <>
-            <OnboardingModal
-              isOpen={isOnboardingOpen}
-              onClose={() => setIsOnboardingOpen(false)}
-              onStartTrip={() => setActiveTab('predictions')}
-            />
-
-            {(() => {
-              switch (activeTab) {
-                case 'landing':
-                  return (
-                    <LandingPage
-                      onNavigateToApp={(tab) => setActiveTab(tab || 'predictions')}
-                      viewMode={viewMode}
-                    />
-                  );
-                case 'overview':
-                  return <DashboardOverview viewMode={viewMode} />;
-                case 'fleet':
-                  return (
-                    <VehicleList
-                      viewMode={viewMode}
-                      onSelectVehicleForTrip={(vehicle) => {
-                        setSelectedVehicle(vehicle);
-                        setActiveTab('predictions');
-                      }}
-                    />
-                  );
-                case 'predictions':
-                  return (
-                    <PredictionForm
-                      viewMode={viewMode}
-                      initialVehicle={selectedVehicle}
-                    />
-                  );
-                case 'optimization':
-                  return <RouteVisualization viewMode={viewMode} />;
-                case 'analytics':
-                  return <PerformanceAnalytics viewMode={viewMode} />;
-                case 'about':
-                  return <AboutPage viewMode={viewMode} />;
-                default:
-                  return (
-                    <LandingPage
-                      onNavigateToApp={(tab) => setActiveTab(tab || 'predictions')}
-                      viewMode={viewMode}
-                    />
-                  );
-              }
-            })()}
-          </>
-        );
+      {(activeTab, setActiveTab) => {
+        switch (activeTab) {
+          case 'route-optimization':
+          case 'fleet-intelligence':
+            return <RouteOptimizationPage onNavigate={setActiveTab} />;
+          case 'carbon-passport':
+            return <CarbonPassportPage onNavigate={setActiveTab} />;
+          case 'government-incentives':
+            return <GovernmentIncentivesPage onNavigate={setActiveTab} />;
+          case 'eco-challenge':
+            return <EcoChallengePage onNavigate={setActiveTab} />;
+          case 'route-risk-meter':
+            return <RouteRiskMeterPage onNavigate={setActiveTab} />;
+          case 'analytics':
+          case 'reports':
+            return <PerformanceAnalytics />;
+          case 'settings':
+            return <SettingsPage onNavigate={setActiveTab} />;
+          case 'overview':
+          case 'dashboard':
+            return <DashboardOverview />;
+          case 'fleet':
+            return <VehicleList />;
+          case 'predictions':
+            return <PredictionForm />;
+          case 'optimization':
+            return <RouteVisualization />;
+          default:
+            return <RouteOptimizationPage onNavigate={setActiveTab} />;
+        }
       }}
     </Layout>
   );
